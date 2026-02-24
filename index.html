@@ -380,6 +380,29 @@ button {
   }
 }
 
+.api-key-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  margin: 10px auto;
+}
+
+.api-key-wrapper input {
+  width: 100%;
+  padding: 10px 40px 10px 10px;
+  font-size: 16px;
+}
+
+.api-key-wrapper button {
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 18px;
+}
 
     	</style>
 
@@ -874,6 +897,27 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+
+const apiKeyInput = document.getElementById("apiKeyInput");
+const toggleKeyBtn = document.getElementById("toggleKey");
+
+// Load saved key
+apiKeyInput.value = localStorage.getItem("openrouter_api_key") || "";
+
+// Save automatically when changed
+apiKeyInput.addEventListener("input", () => {
+  localStorage.setItem("openrouter_api_key", apiKeyInput.value);
+});
+
+// Toggle visibility
+toggleKeyBtn.addEventListener("click", () => {
+  const type = apiKeyInput.getAttribute("type");
+  apiKeyInput.setAttribute(
+    "type",
+    type === "password" ? "text" : "password"
+  );
+});
+
 </script>
 
 <script>
@@ -945,11 +989,36 @@ function toggleUpdateSection() {
     }
 }
 
+const form = document.getElementById("apiForm");
+const apiKeyInput = document.getElementById("apiKeyInput");
+
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  localStorage.setItem("openrouter_api_key", apiKeyInput.value);
+
+  alert("API Key Saved");
+});
+
 </script>
 
 </head>
 <body>
-<div class="container"><input type="text" id="apiKeyInput" placeholder="Enter Openrouter API Key, Empty for Default" /> <button onclick="saveApiKey()">Save</button>
+<div class="container">
+
+<form id="apiForm" autocomplete="on">
+  
+   <!-- Hidden Username -->
+  <input 
+    type="text"
+    name="username"
+    value="prayai_user"
+    autocomplete="username"
+    style="position:absolute; left:-9999px;"
+  >
+
+<input type="password" id="apiKeyInput" placeholder="Enter Openrouter API Key, Empty for Default" autocomplete="current-password"/> <button onclick="saveApiKey()">Save</button></form>
+
 <h2>Bible Prayer</h2>
 <!-- Prayer Request Input --> <textarea id="prayerInput" placeholder="Please enter your prayer request."></textarea> <!-- BULK PRAYER MODE -->
 <div id="bulkContainer" style="display: none; text-align: center;"><i>Group prayer list: Please enter prayee and click save</i>

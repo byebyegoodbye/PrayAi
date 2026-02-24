@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bible Prayer</title> 
+
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+     
+:root {
+    --bg-body: #f4f4f4;
+    --bg-container: #ffffff;
+    --text-main: #333;
+    --bg-input: #ffffff;
+    --border-color: #ccc;
+    --bg-response: #e9ecef;
+}
+
+body.dark {
+    --bg-body: #121212;
+    --bg-container: #1e1e1e;
+    --text-main: #e0e0e0;
+    --bg-input: #2a2a2a;
+    --border-color: #444;
+    --bg-response: #2a2a2a;
+}
+
+body.dark textarea::placeholder {
+    color: #9aa0a6;
+}
+
+ body {
+    font-family: Arial, sans-serif;
+    background-color: var(--bg-body);
+    color: var(--text-main);
+    text-align: center;
+    padding: 40px;
+}
+
+/* Mobile correction */
+@media (max-width: 600px) {
+    body {
+        padding: 16px;
+    }
+}
+
+      .container {
+    width: 100%;
+    max-width: 720px; /* classic, readable width */
+    background: var(--bg-container);
+    padding: 20px;
+    margin: auto;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+}
+
+
+	 textarea {
+            width: 100%;
+            padding: 10px;
+	    max-width: 95%;   /* ideal reading width */
+            margin: 10px auto;  /* center it */
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-top: 10px;
+	    color: var(--text-main);
+            background-color: var(--bg-input);
+            box-shadow: inset 1px 1px 5px rgba(0, 0, 0, 0.1);
+            resize: vertical; /* Allows vertical resizing only */
+            min-height: 50px;
+            max-height: 200px; /* Prevents excessive expansion */
+            overflow-y: auto;
+        }
+
+        h2 {
+            color: var(--text-main);
+        }
+        select, input {
+            width: 100%;
+            padding: 10px;		
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-top: 10px;
+            background-color: #fff;
+            box-shadow: inset 1px 1px 5px rgba(0, 0, 0, 0.1);
+        }
+        #apiKeyInput {
+            width: 60%;
+            font-size: 12px;
+            padding: 5px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .response-box {
+		
+            margin-top: 20px;
+            padding: 15px;
+            background: var(--bg-response);
+            border-radius: 5px;
+            text-align: left;
+            font-size: 16px;
+            color: var(--text-main);
+            white-space: pre-wrap;
+        }
+	/* Choice Chips */
+	.chip-group {
+    	display: flex;
+   	 justify-content: center;
+   	 gap: 10px;
+   	 flex-wrap: wrap;
+    	margin-top: 12px;
+	}
+
+	.chip {
+   	 padding: 8px 14px;
+    	border-radius: 20px;
+   	 border: 2px solid #007BFF;
+   	 background: #fff;
+   	 color: #007BFF;
+   	 cursor: pointer;
+    	font-size: 14px;
+    	user-select: none;
+    	transition: all 0.2s ease;
+	}
+
+	.chip.selected {
+    	background: #007BFF;
+    	color: #fff;
+	}
+
+
+	.form-switch {
+  display: inline-block;
+  min-width: 20px; /* prevents squishing */
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.form-switch i {
+  position: relative;
+  display: inline-block;
+  margin-right: .5rem;
+  width: 46px;
+  height: 26px;
+  background-color: #e6e6e6;
+  border-radius: 23px;
+  vertical-align: text-bottom;
+  transition: all 0.3s linear;
+}
+.form-switch i::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 42px;
+  height: 22px;
+  background-color: #f2f2f2;
+  border-radius: 11px;
+  transform: translate3d(2px, 2px, 0) scale3d(1, 1, 1);
+  transition: all 0.25s linear;
+}
+.form-switch i::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 22px;
+  height: 22px;
+  background-color: #b8b6b6;
+  border-radius: 11px;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.24);
+  transform: translate3d(2px, 2px, 0);
+  transition: all 0.2s ease-in-out;
+}
+.form-switch:active i::after {
+  width: 28px;
+  transform: translate3d(2px, 2px, 0);
+}
+.form-switch:active input:checked + i::after { transform: translate3d(16px, 2px, 0); }
+.form-switch input { display: none; }
+.form-switch input:checked + i { background-color: #4BD763; }
+.form-switch input:checked + i::before { transform: translate3d(18px, 2px, 0) scale3d(0, 0, 0); }
+.form-switch input:checked + i::after { transform: translate3d(22px, 2px, 0); }
+
+.toggle-row {
+    display: flex;
+    flex-wrap: wrap;          /* allow wrapping */
+    justify-content: center;  /* keep centered */
+    gap: 16px;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+
+
+
+.review-card {
+ 
+    background: var(--bg-input);
+    margin: 40px auto;
+    border-radius: 12px;
+    box-shadow: 0 1px 4px rgba(0,0,0,.15);
+    padding: 10px;
+    display: none; /* hidden by default */
+
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+
+}
+
+.header img {
+    height: 24px;
+}
+
+
+.avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #ccc;
+}
+
+.rating-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.rating-row i {
+    font-size: 22px;
+    color: #007BFF;
+}
+
+.rating-row i.inactive {
+    color: #dadce0;
+}
+
+textarea {
+    width: 90%;
+    height: 20px;
+    border: 1px solid #dadce0;
+    border-radius: 6px;
+    font-size: 14px;
+    resize: none;
+    outline: none;
+}
+
+textarea::placeholder {
+    color: #80868b;
+}
+
+.helper-text {
+    font-size: 12px;
+    color: #5f6368;
+    margin-top: 6px;
+}
+
+.actions {
+    display: flex;
+    justify-content: space-between;
+}
+
+button {
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+    border: none;
+}
+
+.btn-submit {
+    background: #007BFF;
+     align-items: center;
+}
+
+.update-section {
+  display: none; /* HIDDEN BY DEFAULT */
+  background: var(--bg-input);
+  padding: 5px;
+  margin-top: 30px;   /*  THIS ADDS THE GAP */
+  margin-bottom: 10px;
+  border-radius: 12px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.app-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 20px;
+  object-fit: cover;
+}
+
+.app-info {
+  flex: 1;
+}
+
+.app-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.app-dev {
+  color: #666;
+  margin-top: 5px;
+}
+
+.button-group {
+  display: flex;
+}
+
+.btn-uninstall {
+  flex: 1;
+  padding: 12px;
+  background-color: #f1f3f4;
+  color: #333;
+  border: none;
+  border-radius: 25px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.btn-uninstall:hover {
+  background-color: #e0e0e0;
+}
+
+.btn-update {
+  flex: 1;
+  padding: 12px;
+  background-color: #0f9d58;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-update:hover {
+  background-color: #0c7c45;
+}
+
+@media (max-width: 600px) {
+  .app-header {
+    flex-direction: column;
+    text-align: center;
+  }
+  .button-group {
+    flex-direction: column;
+  }
+}
+
+
+    	</style>
+
+<script>
+let bulkData = JSON.parse(localStorage.getItem("bulkPrayers")) || [];
+
+
+</script>
+
+
+    <script>
+        let apiKey = localStorage.getItem("apiKey") || '';
+	let lastUserPrayerText = "";
+
+        function saveApiKey() {
+            const inputKey = document.getElementById("apiKeyInput").value.trim();
+
+            if (inputKey) {
+                apiKey = inputKey;
+                localStorage.setItem("apiKey", inputKey);
+                alert("API Key updated successfully!");
+            } else {
+                apiKey = '';
+                localStorage.removeItem("apiKey");
+                alert("Using default API Key.");
+            }
+        }
+
+        function copyToClipboard() {
+            const responseText = document.getElementById("response").innerText;
+            if (responseText === "Waiting for input..." || responseText === "Processing...") return;
+
+            navigator.clipboard.writeText(responseText).then(() => {
+                alert("Copied to clipboard!");
+            }).catch(err => {
+                console.error("Failed to copy:", err);
+            });
+        }
+
+  async function searchBiblePrayer() {
+    const prayerInputEl = document.getElementById("prayerInput");
+    const originalText = prayerInputEl.value.trim();
+    const selectedChip = document.getElementById("selectedChip").value;
+    const isBulk = document.getElementById("BulkToggle").checked;
+    const short =
+    document.getElementById("shortToggle").checked
+        ? " keep it short and sweet."
+        : "";
+
+    const catholic =
+    document.getElementById("catholicToggle").checked
+        ? " Style: Make it Catholic style, featuring structured repetitive prayers (Hail Mary, Our Father, Glory be) integrated with meditation on the mysteries of Gospel events. Beseech Mother Mary and or the saints to intercede."
+        : "";
+
+const emoji =
+    document.getElementById("emojiToggle").checked
+        ? " Please include appropriate emoji in the response."
+        : "";
+
+
+    // Default: retain normal user input
+let prayerRequest = originalText;
+
+if (isBulk) {
+    if (!bulkData.length) {
+        document.getElementById("response").innerText =
+            "Please add at least one person to the group prayer.";
+        return;
+    }
+
+    prayerRequest = bulkData
+        .filter(p => p.name && p.request)
+        .map(p => `For ${p.name}: ${p.request}`)
+        .join(". ");
+}
+
+// Always hide advice button at start
+    document.getElementById("adviceButton").style.display = "none";
+
+    if (!apiKey) {
+        document.getElementById("response").innerText =
+            "API Key is required. Please enter and save your key.";
+        return;
+    }
+
+    if (!prayerRequest) {
+        document.getElementById("response").innerText =
+            "Please enter your prayer request.";
+        return;
+    }
+
+// store prayer properly
+lastUserPrayerText = prayerRequest;
+
+
+
+
+    const fullQuery = `Bible Prayer Request: ${prayerRequest}. Please use Scriptural Verses and exclude notes. Assume you are praying, Elaborately weave the prayer into the verses. Please Do not start a paragraph with a verse but include the verse within. Make it seamless like a pastor praying naturally. ${catholic} ${short} ${emoji} Always end the prayer with the following: In Jesus Name, Amen , in the language of the prayer request. If possible, slightly elaborate the prayer and include 2 or more verses. Reply in the language of the Prayer Request,inclusive of the ending. `;
+
+    document.getElementById("response").innerHTML = "Processing...";
+
+    const apiURL = "https://openrouter.ai/api/v1/chat/completions";
+
+
+const modelToggleEl = document.getElementById("modelModeToggle");
+const modelSelectEl = document.getElementById("modelSelect");
+
+// Restore last selected model
+const savedModel = localStorage.getItem("selectedModel");
+if (savedModel) {
+    modelSelectEl.value = savedModel;
+}
+
+const selectedModel = modelToggleEl.checked
+    ? (modelSelectEl.value || "google/gemma-3n-e4b-it:free")  // user-selected or fallback
+    : "google/gemma-3n-e4b-it:free"; // reliable default when toggle is off
+
+    const payload = {
+        model: selectedModel,
+        messages: [
+            {
+                role: "user",
+                content: fullQuery
+            }
+        ]
+    };
+
+    try {
+        const response = await fetch(apiURL, {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${apiKey}`,
+                "Content-Type": "application/json",
+		"HTTP-Referer": "Pray-Ai", // optional
+		"X-Title": "Pray-Ai" // optional
+            },
+            body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+        let responseText = result?.choices?.[0]?.message?.content || "No response received.";
+
+        // Bold and bullet cleanup
+        responseText = responseText.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+        responseText = responseText.replace(/\*(.*?)\*/g, "• $1");
+
+        document.getElementById("response").innerHTML = responseText;
+
+
+	 // Show advice button ONLY after successful prayer
+        document.getElementById("adviceButton").style.display = "inline-block";
+
+    } catch (error) {
+        document.getElementById("response").innerText = "Error: " + error.message;
+    }
+}
+
+// function for advise
+
+async function getAdvice() {
+
+document.getElementById("adviceButton").style.display = "none";
+
+    const modelToggleEl = document.getElementById("modelModeToggle");
+    const modelSelectEl = document.getElementById("modelSelect");
+
+const prayerText = lastUserPrayerText || "";
+
+if (!prayerText) {
+    document.getElementById("response").innerText =
+        "Please generate a prayer first before asking for advice.";
+    return;
+}
+
+const selectedModel = modelToggleEl.checked
+    ? (modelSelectEl.value || "google/gemma-3n-e4b-it:free")
+    : "google/gemma-3n-e4b-it:free";
+
+    const adviceQuery = `${prayerText}, give me advice for the issues in the prayer without repeating the prayer again. Do not share anything about prayer and let it be strictly on advice. Let advise be clear and concise where possible. Let it be practical advice where possible. Reply in the language of the Prayer Request always.`;
+
+    document.getElementById("response").innerHTML = "Seeking guidance...";
+
+    try {
+        const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${apiKey}`,
+                "Content-Type": "application/json",
+                "HTTP-Referer": "Pray-Ai",
+                "X-Title": "Pray-Ai"
+            },
+            body: JSON.stringify({
+                model: selectedModel,
+                messages: [
+                    {
+                        role: "user",
+                        content: adviceQuery
+                    }
+                ]
+            })
+        });
+
+        const result = await response.json();
+        let responseText =
+            result?.choices?.[0]?.message?.content || "No advice received.";
+
+        responseText = responseText.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+        responseText = responseText.replace(/\*(.*?)\*/g, "• $1");
+
+        // OVERRIDES previous prayer — as requested
+        document.getElementById("response").innerHTML = responseText;
+
+    } catch (error) {
+        document.getElementById("response").innerText =
+            "Error: " + error.message;
+    }
+}
+
+// Restore saved prayer on page load
+document.addEventListener("DOMContentLoaded", function () {
+    const prayerInputEl = document.getElementById("prayerInput");
+    const savedPrayer = localStorage.getItem("prayerRequest") || "";
+    if (savedPrayer) {
+        prayerInputEl.value = savedPrayer;
+    }
+
+// Restore toggle option for shorten on page load
+document.getElementById("shortToggle").addEventListener("change", function () {
+    localStorage.setItem("shortToggle", this.checked);
+});
+
+// Restore Catholic Option on shorten
+document.getElementById("catholicToggle").addEventListener("change", function () {
+    localStorage.setItem("catholicToggle", this.checked);
+});
+
+    // Save input on typing
+    prayerInputEl.addEventListener("input", () => {
+        localStorage.setItem("prayerRequest", prayerInputEl.value);
+    });
+
+    // Restore selected chip if it matches saved input
+    const chips = document.querySelectorAll(".chip");
+    const selectedChipInput = document.getElementById("selectedChip");
+    chips.forEach(chip => {
+        if (chip.dataset.value.toLowerCase() === savedPrayer.toLowerCase()) {
+            chip.classList.add("selected");
+            selectedChipInput.value = chip.dataset.value;
+        }
+    });
+
+// SHOW / HIDE otherLang when Custom is selected
+const otherLang = document.getElementById("otherLang");
+
+if (value === "Custom") {
+    otherLang.style.display = "inline-block";
+    otherLang.focus();
+} else {
+    otherLang.style.display = "none";
+    otherLang.value = "";
+}
+
+});
+
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const emojiToggle = document.getElementById("emojiToggle");
+
+    // RESTORE
+    const savedEmoji = localStorage.getItem("emojiToggle");
+    if (savedEmoji !== null) {
+        emojiToggle.checked = savedEmoji === "true";
+    }
+
+    // SAVE
+    emojiToggle.addEventListener("change", function () {
+        localStorage.setItem("emojiToggle", this.checked);
+    });
+
+});
+
+
+
+    </script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const chips = document.querySelectorAll(".chip");
+    const selectedChipInput = document.getElementById("selectedChip");
+    const prayerInputEl = document.getElementById("prayerInput");
+
+    chips.forEach(chip => {
+        chip.addEventListener("click", () => {
+            const isSelected = chip.classList.contains("selected");
+            const value = chip.dataset.value;
+
+            // Clear all first
+            chips.forEach(c => c.classList.remove("selected"));
+            selectedChipInput.value = "";
+
+            if (isSelected) {
+                // DESELECT: clear everything
+                prayerInputEl.value = "";
+            } else {
+                // SELECT
+                chip.classList.add("selected");
+                selectedChipInput.value = value;
+
+		if (value === "Favour") {
+                prayerInputEl.value = "Lord, I pray for <name> for Your favour. Let Your kindness go before him, and let Your mercy surround him in all that I do. Grant him favour in the eyes of those in authority and in every lawful and righteous endeavour set before him. Establish the work of his hands. Let this season be marked by open doors, timely help. If the prayee name is female, the prompt changes as him to her.";
+                }
+
+		if (value === "Love") {
+                prayerInputEl.value = "Lord, I pray for <name> for Your love, seeking Your guidance and blessing in the matters of his heart. You know his desires, his longings, and the deepest yearnings that he carry. Prepare his heart to give love selflessly and receive it graciously. Guard him against relationships that would harm or mislead him, and guide him toward connections that will honour You and build one another up. Help him to grow in love for others as You have taught, and above all, help him to trust Your timing and Your plan. If the prayee name is female, the prompt changes as him becomes her.";
+                }
+
+		if (value === "Peace") {
+                prayerInputEl.value = "We commit <country name>, mindful of the suffering, conflict, and unrest that fill our world. We acknowledge that true peace can only come from Your hand, and we earnestly seek Your mercy and guidance. Heal the wounds of those affected by violence, poverty, and injustice. May Your peace, which surpasses all understanding, descend upon every land. Teach us to walk in humility, to speak with kindness, and to act with fairness, so that Your will for harmony and goodwill may be fulfilled among all people.";
+                }
+		
+		if (value === "Healing") {
+                prayerInputEl.value = "Lord, I pray for <name> for Your healing for <condition>. I come before You with a humble heart, seeking Your healing hand. Lord, I ask for Your restoration, Your strength, and Your peace. Lord, bless the hands of those who care for him. Give them wisdom, skill, and discernment in all treatments and interventions. May Your healing light shine upon him, bringing strength, renewal, and relief from every affliction. If the prayee name is female, the prompt changes as him becomes her.";
+                }
+
+		if (value === "Family Harmony") {
+                prayerInputEl.value = "Lord, I pray for <name> for Family harmony, remove every spirit of division, misunderstanding, and resentment from among him. Where there has been conflict, bring reconciliation. Where there has been distance, restore closeness and trust.Grant each member of this family a heart marked by humility, respect, and self-control. Help us to bear with one another in love, to forgive readily, and to place the well-being of the family above pride or personal ambition.If the prayee name is female, the prompt changes as him becomes her.";
+                }
+
+		if (value === "My Work Job") {
+                prayerInputEl.value = "Lord, I pray for <name> for his career and professional calling. You have endowed him with abilities and I ask that You direct his steps according to Your will. Grant him wisdom in every decision, diligence in every task, integrity in all his conduct. Open the right doors at the right time, and close those that would lead him away. Grant him favour with those he work with and serve.If the prayee name is female, the prompt changes as him to her.";
+                }
+		
+	if (value === "Custom") {
+    otherLang.style.display = "inline-block";
+    otherLang.focus();
+
+	// restore previous custom text
+    const saved = localStorage.getItem("customPrayer") || "";
+    otherLang.value = saved;
+    prayerInputEl.value = saved;
+
+      // REAL-TIME mirroring
+                otherLang.addEventListener("input", function () {
+                    prayerInputEl.value = this.value;
+		    localStorage.setItem("customPrayer", this.value);   // <-- correct key
+                    localStorage.setItem("prayerRequest", this.value);
+                });
+
+    // If user clicks Custom again, keep current value
+    prayerInputEl.value = otherLang.value;
+}
+            }
+
+            localStorage.setItem("prayerRequest", prayerInputEl.value);
+        });
+    });
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    const shortToggle = document.getElementById("shortToggle");
+    const saved = localStorage.getItem("shortToggle");
+
+    if (saved !== null) {
+        shortToggle.checked = saved === "true";
+    }
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    const shortToggle = document.getElementById("catholicToggle");
+    const saved = localStorage.getItem("catholicToggle");
+
+    if (saved !== null) {
+        shortToggle.checked = saved === "true";
+    }
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    const saved = localStorage.getItem("customPrayer") || "";
+    const otherLang = document.getElementById("otherLang");
+
+    // hide on load
+    otherLang.style.display = "none";
+
+    // keep the text saved, but invisible
+    otherLang.value = saved;
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    const copyBtn = document.getElementById("copyButton");
+    const card = document.querySelector(".review-card");
+
+    if (copyBtn && card) {
+        copyBtn.addEventListener("click", function () {
+            card.style.display = "block";
+        });
+    }
+});
+
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const toggle = document.getElementById("darkModeToggle");
+    const savedTheme = localStorage.getItem("theme");
+
+    if (savedTheme === "dark") {
+        document.body.classList.add("dark");
+        toggle.checked = true;
+    }
+
+    toggle.addEventListener("change", function () {
+        if (this.checked) {
+            document.body.classList.add("dark");
+            localStorage.setItem("theme", "dark");
+        } else {
+            document.body.classList.remove("dark");
+            localStorage.setItem("theme", "light");
+        }
+    });
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    const bulkToggle = document.getElementById("BulkToggle");
+    if (!bulkToggle) return;
+
+    // RESTORE
+    const savedBulk = localStorage.getItem("bulkToggle");
+    if (savedBulk !== null) {
+        bulkToggle.checked = savedBulk === "true";
+    }
+
+    // APPLY UI IMMEDIATELY
+    applyBulkUI(bulkToggle.checked);
+
+    // SAVE ON CHANGE
+    bulkToggle.addEventListener("change", function () {
+        localStorage.setItem("bulkToggle", this.checked);
+        applyBulkUI(this.checked);
+    });
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    const modelToggle = document.getElementById("modelModeToggle");
+    const modelSelect = document.getElementById("modelSelect");
+
+    if (!modelToggle || !modelSelect) return;
+
+    // Save toggle state only when user clicks manually
+    modelToggle.addEventListener("change", function () {
+        localStorage.setItem("modelModeToggle", this.checked);
+
+        // Show/hide dropdown only when user toggles
+        modelSelect.style.display = this.checked ? "block" : "none";
+    });
+
+    // Restore previously selected model internally
+    const savedModel = localStorage.getItem("selectedModel");
+    if (savedModel) {
+        modelSelect.value = savedModel;
+    }
+
+});
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    const modelToggleEl = document.getElementById("modelModeToggle");
+    const modelSelectEl = document.getElementById("modelSelect");
+
+    // Restore last selected model
+    const savedModel = localStorage.getItem("selectedModel");
+    if (savedModel) {
+        modelSelectEl.value = savedModel;
+    }
+
+    // Restore toggle state
+    const savedToggle = localStorage.getItem("modelModeToggle");
+    modelToggleEl.checked = savedToggle === "true";
+
+    // Show/hide dropdown based on toggle
+    modelSelectEl.style.display = modelToggleEl.checked ? "block" : "none";
+
+    // When user changes toggle
+    modelToggleEl.addEventListener("change", function () {
+        localStorage.setItem("modelModeToggle", this.checked);
+        modelSelectEl.style.display = this.checked ? "block" : "none";
+    });
+
+    // Save selected model when changed
+    modelSelectEl.addEventListener("change", function () {
+        localStorage.setItem("selectedModel", this.value);
+    });
+});
+
+</script>
+
+<script>
+function addBulkEntry() {
+    bulkData.push({ name: "", request: "" });
+    renderBulk();
+}
+
+function renderBulk() {
+    const container = document.getElementById("bulkList");
+    container.innerHTML = "";
+
+    bulkData.forEach((item, index) => {
+        const row = document.createElement("div");
+        row.style.marginBottom = "1px";
+
+        row.innerHTML = `
+            <input placeholder="Prayee"
+                   value="${item.name}"
+                   oninput="bulkData[${index}].name=this.value"
+                   style="width:30%; margin-right:5px;">
+            <input placeholder="Prayer request"
+                   value="${item.request}"
+                   oninput="bulkData[${index}].request=this.value"
+                   style="width:30%;">
+            <button onclick="removeBulk(${index})">X</button>
+        `;
+        container.appendChild(row);
+    });
+}
+
+function removeBulk(index) {
+    bulkData.splice(index, 1);
+    renderBulk();
+}
+
+function saveBulk() {
+    localStorage.setItem("bulkPrayers", JSON.stringify(bulkData));
+    alert("Group prayers saved.");
+}
+
+function loadBulk() {
+    bulkData = JSON.parse(localStorage.getItem("bulkPrayers")) || [];
+    renderBulk();
+}
+
+function applyBulkUI(isBulk) {
+    const prayerInput = document.getElementById("prayerInput");
+    const bulkContainer = document.getElementById("bulkContainer");
+
+    if (!prayerInput || !bulkContainer) return;
+
+    prayerInput.style.display = isBulk ? "none" : "block";
+    bulkContainer.style.display = isBulk ? "block" : "none";
+
+    if (isBulk) {
+        loadBulk();
+    }
+}
+
+function toggleUpdateSection() {
+    const section = document.querySelector(".update-section");
+
+    if (section.style.display === "block") {
+        section.style.display = "none";
+    } else {
+        section.style.display = "block";
+        section.scrollIntoView({ behavior: "smooth" });
+    }
+}
+
+</script>
+
+</head>
+<body>
+<div class="container"><input type="text" id="apiKeyInput" placeholder="Enter Openrouter API Key, Empty for Default" /> <button onclick="saveApiKey()">Save</button>
+<h2>Bible Prayer</h2>
+<!-- Prayer Request Input --> <textarea id="prayerInput" placeholder="Please enter your prayer request."></textarea> <!-- BULK PRAYER MODE -->
+<div id="bulkContainer" style="display: none; text-align: center;"><i>Group prayer list: Please enter prayee and click save</i>
+<div id="bulkList"></div>
+<button onclick="addBulkEntry()">+Add</button> <button onclick="saveBulk()">Save</button></div>
+<select id="queryType">
+<option value="">Can You Pray for Me?</option>
+</select><br /><br />Unsure? Select from the following templates:
+<div class="chip-group" id="chipGroup">
+<div class="chip" data-value="Favour">+ Favour</div>
+<div class="chip" data-value="Love">+ Love</div>
+<div class="chip" data-value="Peace">+ World Peace</div>
+<div class="chip" data-value="Healing">+ Healing</div>
+<div class="chip" data-value="Family Harmony">+ Family Harmony</div>
+<div class="chip" data-value="My Work Job">+ My Work Job</div>
+<div class="chip" data-value="Custom">+ Custom</div>
+<input type="text" id="otherLang" placeholder="Your Frequent Prayer Request?" style="display: none; width: 50%; margin-top: 0px;" /></div>
+<input type="hidden" id="selectedChip" value="" /> <br />
+<div class="toggle-row"><label class="form-switch"> <input type="checkbox" id="shortToggle" /> <i></i><br />Shorten </label> <label class="form-switch"> <input type="checkbox" id="catholicToggle" /> <i></i> <br />Catholic </label> <label class="form-switch"> <input type="checkbox" id="emojiToggle" /> <i></i><br />Emoji</label><label class="form-switch"> <input type="checkbox" id="BulkToggle" /> <i></i><br />Group </label> <label class="form-switch"> <input type="checkbox" id="modelModeToggle" /> <i></i><br />Model</label><select id="modelSelect" style="display: none; width: 50%; margin-top: 0px;">
+<option disabled="disabled">Preferred Models</option>
+<option value="google/gemma-3n-e2b-it:free">Google Gemma 3n</option>
+<option value="nvidia/nemotron-3-nano-30b-a3b:free">NVIDIA: Nemotron 3 Nano</option>
+<option value="google/gemma-3n-e4b-it:free" selected="selected">Google Gemma 3n4b (Default)</option>
+<option disabled="disabled">Others</option>
+<option value="nvidia/nemotron-nano-12b-v2-vl:free">Nvidia: Nemotron 2</option>
+<option value="nvidia/nemotron-nano-9b-v2:free">NVIDIA: Nemotron Nano 9B V2</option>
+<option value="openai/gpt-oss-20b:free">OpenAI: gpt-oss-20b</option>
+<option value="openai/gpt-oss-120b:free">OpenAI: gpt-oss-120b</option>
+<option value="meta-llama/llama-3.3-70b-instruct:free">Meta: Llama 3.3 70B Instruct</option>
+<option value="meta-llama/llama-3.2-3b-instruct:free">Meta: Llama 3.2 3B Instruct</option>
+<option value="tngtech/deepseek-r1t2-chimera:free">DeepSeek R1T2 Chimera</option>
+<option disabled="disabled">Random</option>
+<option value="openrouter/free">Any available Model</option>
+</select><label class="form-switch"> <input type="checkbox" id="darkModeToggle" /> <i></i><br />Dark mode</label></div>
+<br /><button onclick="searchBiblePrayer()">Pray for me</button> <br />
+<h6><a href="andromoV3://custompage_1742785817_d1ce4efcde"><span style="text-decoration: underline;">&nbsp;<span>🚩</span>Found an error? report it by going to Menu, then Contact Us and fill up the form.<span>🚩</span></span></a></h6>
+
+
+Response: <br /><button id="copyButton" onclick="copyToClipboard()">Copy to Clipboard</button><br /><button id="adviceButton" onclick="getAdvice()" style="display: none; background-color: #a370f0; color: white;"> Give me advise </button>
+<div class="review-card"><!-- Header -->
+<div class="header">
+<div class="header-left"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Google_Play_2022_logo.svg/2560px-Google_Play_2022_logo.svg.png" /></div>
+<div class="header-left">
+<div class="avatar"></div>
+</div>
+</div>
+<!-- Rating -->
+<div class="rating-row"><i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star inactive"></i></div>
+<textarea placeholder="(Optional) Found this prayer helpful? Share it in review! God Bless!" readonly="readonly"></textarea> <!-- Actions -->
+<div class="actions"><button onclick="window.location.href='https://play.google.com/store/apps/details?id=com.newandromo.dev2862854.app4092850&amp;reviewId=1&amp;showAllReviews=true'" button="" class="btn-submit">Review!</button></div>
+</div>
+<div class="update-section">
+<br>
+  <div class="app-header">
+    <img src="https://play-lh.googleusercontent.com/-vMT92CAs8P8fbcXZbMzpGNlYGqbe8eUg35dbABsk9YtsJhlml3OvAjOut7b-dFSHg=s96-rw"
+         alt="App Icon"
+         class="app-icon">
+
+    <div class="app-info">
+      <p class="app-title">PRAY.AI – CREATE, SHARE, PRAY</p>
+      <p class="app-dev">JaysonTech</p>
+    </div>
+  </div>
+
+  <div class="button-group">
+    <button class="btn-uninstall"
+      >
+      Uninstall
+    </button>
+
+    <button class="btn-update"
+      onclick="window.location.href='https://play.google.com/store/apps/details?id=com.newandromo.dev2862854.app4092850'">
+      Update
+    </button>
+  </div>
+</div>
+
+
+<div id="response" class="response-box"><i>Waiting for your prayer. If no prayer response or error, Click Model toggle above and choose a different model or try again later</i></div>
+</div>
+<h6>
+  <span style="text-decoration: underline; cursor: pointer;"
+        onclick="toggleUpdateSection()">
+        ©JaysonTech, 2026. Keep your app updated by clicking here!
+  </span>
+</h6>
+
+</body>
+</html>

@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+
+
+:root {
+    --bg-body: #f4f4f4;
+    --bg-container: #ffffff;
+    --text-main: #333;
+    --bg-input: #ffffff;
+    --border-color: #ccc;
+    --bg-response: #e9ecef;
+}
+
+      body {
+    font-family: Arial, sans-serif;
+    background-color: var(--bg-body);
+    color: var(--text-main);
+    text-align: center;
+    padding: 40px;
+}
+
+	
+/* Mobile correction */
+@media (max-width: 600px) {
+    body {
+        padding: 16px;
+    }
+}
+
+
+        .container {
+	    width: 100%;
+            max-width: 100%;
+            background: var(--bg-container);
+            padding: 20px;
+            margin: auto;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+	    box-sizing: border-box;
+        }
+        h2 {
+    color: var(--text-main);
+}
+
+        select, 
+
+	input {
+            width: 100%;
+	    max-width: 100%;
+            padding: 10px;
+	    margin: 10px auto;
+            display: block;
+            border: 2px solid var(--border-color);
+	    color: var(--text-main);
+            border-radius: 5px;
+            font-size: 16px;
+            margin-top: 10px;
+            background-color: var(--bg-input);
+            box-shadow: inset 1px 1px 5px rgba(0, 0, 0, 0.1);
+        }
+        #apiKeyInput {
+            width: 60%; /* Adjusted for better usability */
+            font-size: 12px;
+            padding: 5px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .response-box {
+            margin-top: 20px;
+            padding: 15px;
+            background: var(--bg-response);
+            border-radius: 5px;
+            text-align: left;
+            font-size: 16px;
+            color: var(--text-main);
+            white-space: pre-wrap;
+        }
+    </style>
+
+<title>Word of day</title>
+<style>
+body.dark {
+    --bg-body: #121212;
+    --bg-container: #1e1e1e;
+    --text-main: #e0e0e0;
+    --bg-input: #2a2a2a;
+    --border-color: #444;
+    --bg-response: #2a2a2a;
+}
+
+
+  .votd-box {
+    background:var(--bg-response);
+    padding:5px;
+    max-width:100%;
+    border-radius:8px;
+}
+
+.votd-box h2 {
+    margin-top:0;
+    font-size:10px;
+    font-weight:bold;
+}
+
+.votd-text,
+.votd-ref {
+    font-size:10px;
+    line-height:1.0;
+}
+
+
+
+/* Choice Chips */
+	.chip-group {
+    	display: flex;
+   	 justify-content: center;
+   	 gap: 10px;
+   	 flex-wrap: wrap;
+    	margin-top: 12px;
+	}
+
+	.chip {
+   	 padding: 8px 14px;
+    	border-radius: 20px;
+   	 border: 2px solid #007BFF;
+   	 background: #fff;
+   	 color: #007BFF;
+   	 cursor: pointer;
+    	font-size: 14px;
+    	user-select: none;
+    	transition: all 0.2s ease;
+	}
+
+	.chip.selected {
+    	background: #007BFF;
+    	color: #fff;
+	}
+
+.form-switch {
+  display: inline-block;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.form-switch i {
+  position: relative;
+  display: inline-block;
+  margin-right: .5rem;
+  width: 46px;
+  height: 26px;
+  background-color: #e6e6e6;
+  border-radius: 23px;
+  vertical-align: text-bottom;
+  transition: all 0.3s linear;
+}
+.form-switch i::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 42px;
+  height: 22px;
+  background-color: #f2f2f2;
+  border-radius: 11px;
+  transform: translate3d(2px, 2px, 0) scale3d(1, 1, 1);
+  transition: all 0.25s linear;
+}
+.form-switch i::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 22px;
+  height: 22px;
+  background-color: #b8b6b6;
+  border-radius: 11px;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.24);
+  transform: translate3d(2px, 2px, 0);
+  transition: all 0.2s ease-in-out;
+}
+.form-switch:active i::after {
+  width: 28px;
+  transform: translate3d(2px, 2px, 0);
+}
+.form-switch:active input:checked + i::after { transform: translate3d(16px, 2px, 0); }
+.form-switch input { display: none; }
+.form-switch input:checked + i { background-color: #4BD763; }
+.form-switch input:checked + i::before { transform: translate3d(18px, 2px, 0) scale3d(0, 0, 0); }
+.form-switch input:checked + i::after { transform: translate3d(22px, 2px, 0); }
+
+.toggle-row {
+    display: flex;
+    flex-wrap: wrap;          /* allow wrapping */
+    justify-content: center;  /* keep centered */
+    gap: 16px;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.votd-frame-wrapper {
+    width: 133.33%;          /* compensate for 0.75 scale */
+    overflow: hidden;
+    transform: scale(0.75);
+    transform-origin: top left;
+
+}
+
+.votd-frame-wrapper iframe {
+    width: 100%;
+    pointer-events: none;
+    min-height: 90px;   /* adjust as needed */
+    border: none;
+    display: block;
+}
+
+ /* Cards Grid */
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        max-width: 100%;
+        margin: auto;
+        color: var(--bg-response);
+    }
+
+    .card {
+        display: block;
+        background: var(--bg-response);
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        text-decoration: none;
+        color: var(--bg-response);
+        transition: transform 0.2s ease;
+	width: 50%
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+    }
+
+    .content {
+        padding: 14px 18px;
+    }
+
+    .title {
+        font-size: 16px;
+        font-weight: bold;
+        margin-bottom: 4px;
+       color: var(--bg-response);
+    }
+
+    .subtitle {
+        color: var(--bg-response);
+        font-size: 13px;
+        margin-bottom: 8px;
+    }
+
+    .description {
+        font-size: 11px;
+        color: var(--bg-response);
+        line-height: 1.35;
+    }
+
+/* ===== Prayer Horizontal Scroll ===== */
+
+.prayer-scroll-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; 
+}
+
+.prayer-scroll {
+    display: flex;
+    flex-wrap: nowrap;      /* IMPORTANT: prevents wrapping */
+    gap: 16px;
+    width: max-content;     /* forces horizontal overflow */
+}
+
+.prayer-card {
+    min-width: 280px;
+    max-width: 280px;
+    background: var(--bg-response);
+    color: var(--text-main);
+    padding: 8px 10px;        /* reduced from 16px */
+    border-radius: 8px;      /* slightly tighter */
+    flex-shrink: 0;
+    line-height: 1.2;        /* tighter text */
+}
+
+.prayer-card .title {
+    font-size: 12px;
+    margin-bottom: 4px;
+    margin-top: 8px;
+    color: var(--text-main);
+}
+
+.prayer-card .description {
+    font-size: 10px;
+    line-height: 1.2;
+    color: var(--text-main);
+}
+
+</style>
+
+<body onload="loadPreviousSelections()">
+<script>
+    let apiKey = localStorage.getItem("apiKey") || '';
+
+    function saveApiKey() {
+    const inputKey = document.getElementById("apiKeyInput").value.trim();
+
+    if (inputKey) {
+        apiKey = inputKey;
+        localStorage.setItem("apiKey", inputKey);
+        alert("API Key updated successfully!");
+    } else {
+        // Revert to default API key
+        apiKey = '';
+        localStorage.removeItem("apiKey"); // Clear saved key to use default
+        alert("Using default API Key.");
+    }
+}
+
+
+    function loadPreviousSelections() {
+        document.getElementById("apiKeyInput").value = localStorage.getItem("apiKey") || "";
+
+        const savedBook = localStorage.getItem("selectedBook");
+        if (savedBook) {
+            document.getElementById("book").value = savedBook;
+            updateChapters();
+        }
+
+        const savedChapter = localStorage.getItem("selectedChapter");
+        if (savedChapter) {
+            document.getElementById("chapter").value = savedChapter;
+        }
+
+        const savedQueryType = localStorage.getItem("selectedQueryType");
+        if (savedQueryType) {
+            document.getElementById("queryType").value = savedQueryType;
+        }
+	const savedLang = localStorage.getItem("selectedLang");
+    	if (savedLang) {
+        document.getElementById("langSelect").value = savedLang;
+        }
+
+	const savedCustom = localStorage.getItem("customLangText");
+
+	if (savedLang === "Others") {
+    document.getElementById("otherLang").style.display = "block";
+    if (savedCustom) {
+        document.getElementById("otherLang").value = savedCustom;
+    }
+	}
+}
+
+    function updateChapters() {
+        const bookSelect = document.getElementById("book");
+        const chapterSelect = document.getElementById("chapter");
+        const selectedBook = bookSelect.value;
+
+        localStorage.setItem("selectedBook", selectedBook);
+
+        chapterSelect.innerHTML = "<option value='' selected>Select a Chapter</option>";
+
+        if (selectedBook && books[selectedBook]) {
+            for (let i = 1; i <= books[selectedBook]; i++) {
+                let option = document.createElement("option");
+                option.value = i;
+                option.textContent = i;
+                chapterSelect.appendChild(option);
+            }
+        }
+
+        const savedChapter = localStorage.getItem("selectedChapter");
+        if (savedChapter) {
+            chapterSelect.value = savedChapter;
+        }
+    }
+
+    function saveSelection() {
+        localStorage.setItem("selectedChapter", document.getElementById("chapter").value);
+        localStorage.setItem("selectedQueryType", document.getElementById("queryType").value);
+	 localStorage.setItem("selectedLang", document.getElementById("langSelect").value);
+    }
+
+function updateLang() {
+    const selectedLang = document.getElementById("langSelect").value;
+    const otherInput = document.getElementById("otherLang");
+
+    localStorage.setItem("selectedLang", selectedLang);
+
+    if (selectedLang === "Others") {
+        otherInput.style.display = "block";
+        const savedCustom = localStorage.getItem("customLangText");
+        if (savedCustom) {
+            otherInput.value = savedCustom;
+        }
+    } else {
+        otherInput.style.display = "none";
+        otherInput.value = "";
+    }
+}
+
+
+
+function copyToClipboard() {
+    const responseText = document.getElementById("response").innerText;
+
+    if (
+        responseText === "Waiting for input..." ||
+        responseText === "Processing..." ||
+        !responseText.trim()
+    ) return;
+
+    navigator.clipboard.writeText(responseText)
+        .then(() => {
+            alert("Copied to clipboard!");
+        })
+        .catch(err => {
+            console.error("Failed to copy:", err);
+        });
+}
+
+
+async function searchBible() {
+    saveSelection();
+
+    const book = document.getElementById("book").value;
+    const chapter = document.getElementById("chapter").value;
+    const queryType = document.getElementById("queryType").value;
+    const lang = document.getElementById("langSelect").value;
+
+    if (!apiKey) {
+        document.getElementById("response").innerText = "API Key is required. Please enter and save your key.";
+        return;
+    }
+
+    if (!book || !chapter) {
+        document.getElementById("response").innerText = "Please select a book and chapter.";
+        return;
+    }
+
+
+	let finalLang = lang;
+
+	if (lang === "Others") {
+    const custom = document.getElementById("otherLang").value.trim();
+    if (custom) finalLang = custom;
+    }
+
+    const fullQuery = `Bible ${queryType ? queryType + " - " : ""}${book} Chapter ${chapter}. Reply in Language: ${finalLang}`;
+
+    const url = "https://openrouter.ai/api/v1/chat/completions";
+
+const modelToggleEl = document.getElementById("modelModeToggle");
+const modelSelectEl = document.getElementById("modelSelect");
+
+// Restore last selected model
+const savedModel = localStorage.getItem("selectedModel");
+if (savedModel) {
+    modelSelectEl.value = savedModel;
+}
+
+const selectedModel = modelToggleEl.checked
+    ? (modelSelectEl.value || "openrouter/free")  // user-selected or fallback
+    : "openrouter/free"; // reliable default when toggle is off
+
+
+    document.getElementById("response").innerHTML = "Processing...";
+
+    const payload = {
+        model: selectedModel,
+        messages: [
+            {
+                role: "user",
+                content: fullQuery
+            }
+        ]
+    };
+
+    try {
+        const response = await fetch(url, {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${apiKey}`,
+                "Content-Type": "application/json",
+                "HTTP-Referer": "Pray-Ai",
+                "X-Title": "Pray-Ai"
+            },
+            body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+
+
+let responseText = result?.choices?.[0]?.message?.content || "No response received.";
+
+
+        // Bold + bullet replacements stay intact
+        responseText = responseText.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+        responseText = responseText.replace(/\*(.*?)\*/g, "• $1");
+
+        document.getElementById("response").innerHTML = responseText;
+    } catch (error) {
+        console.error(error);
+    document.getElementById("response").innerText =
+        "We’re unable to generate a response right now. Please try again.";
+    }
+}
+
+</script>
+<script>
+
+document.addEventListener("DOMContentLoaded", function() {
+    const votdToggle = document.getElementById("VOTDModeToggle");
+    const votdBox = document.getElementById("votdBox");
+
+    // Restore saved state or default to checked
+    const savedVOTD = localStorage.getItem("VOTDModeToggle");
+    if (savedVOTD !== null) {
+        votdToggle.checked = savedVOTD === "true";
+    } else {
+        votdToggle.checked = true; // default on
+    }
+
+    // Apply initial visibility
+    votdBox.style.display = votdToggle.checked ? "block" : "none";
+
+    // When user toggles
+    votdToggle.addEventListener("change", function() {
+        votdBox.style.display = this.checked ? "block" : "none";
+        localStorage.setItem("VOTDModeToggle", this.checked);
+    });
+});
+
+</script>
+<div class="container">
+<div class="votd-box" id="votdBox">
+<div class="votd-frame-wrapper"><iframe src="https://www.biblegateway.com/votd/get/?format=html&amp;version=NIV" scrolling="no">
+  </iframe></div>
+<div id="votd-ref" class="votd-ref"></div>
+</div>
+
+<div class="container"  id="prayerSection">
+<div class="prayer-scroll-wrapper">
+  <div class="prayer-scroll">
+
+    <div class="prayer-card">
+      <div class="title">Overcome Fear</div>
+      <div class="description">
+        Fear Not! Overcome Fear with these verses!
+      </div>
+    </div>
+
+
+    <div class="prayer-card">
+      <div class="title">Deuteronomy 31:6</div>
+      <div class="description">
+        Be strong and courageous. Do not be afraid, for the Lord your God goes with you; He will never leave you nor forsake you.
+      </div>
+    </div>
+
+<div class="prayer-card">
+      <div class="title">Psalm 27:1</div>
+      <div class="description">
+        The Lord is my light and my salvation; whom shall I fear? The Lord is the strength of my life; of whom shall I be afraid?
+      </div>
+    </div>
+
+<div class="prayer-card">
+      <div class="title">Psalm 118:6</div>
+      <div class="description">
+        The Lord is on my side; I will not fear. What can man do to me?
+      </div>
+    </div>
+
+<div class="prayer-card">
+      <div class="title">Proverbs 3:25-26</div>
+      <div class="description">
+        Do not be afraid of sudden terror, nor of trouble from the wicked when it comes; for the Lord will be your confidence, and will keep your foot from being caught.
+      </div>
+    </div>
+
+<div class="prayer-card">
+      <div class="title">Proverbs 29:25</div>
+      <div class="description">
+        The fear of man brings a snare, but whoever trusts in the Lord shall be safe.
+      </div>
+    </div>
+
+<div class="prayer-card">
+      <div class="title">Isaiah 41:10</div>
+      <div class="description">
+        Fear not, for I am with you; be not dismayed, for I am your God. I will strengthen you, yes, I will help you, I will uphold you with My righteous right hand.
+      </div>
+    </div>
+
+<div class="prayer-card">
+      <div class="title"> Overcome Discouragement</div>
+      <div class="description">
+       <b> Overcome Discouragement with these verses</b>
+      </div>
+    </div>
+
+    <div class="prayer-card">
+      <div class="title">Deuteronomy 33:27</div>
+      <div class="description">
+        The eternal God is your refuge, and underneath are the everlasting arms; He will thrust out the enemy from before you, and will say, “Destroy!”
+      </div>
+    </div>
+
+    <div class="prayer-card">
+      <div class="title">Joshua 1:9</div>
+      <div class="description">
+        Have I not commanded you? Be strong and of good courage; do not be afraid, nor be dismayed, for the Lord your God is with you wherever you go.
+      </div>
+    </div>
+
+   <div class="prayer-card">
+      <div class="title">Psalm 27:14</div>
+      <div class="description">
+        Wait on the Lord; be of good courage, and He shall strengthen your heart; wait, I say, on the Lord!
+      </div>
+    </div>
+
+   <div class="prayer-card">
+      <div class="title">Psalm 46:1-3</div>
+      <div class="description">
+        God is our refuge and strength, a very present help in trouble. Therefore we will not fear, even though the earth be removed, and though the mountains be carried into the midst of the sea; though its waters roar and be troubled, though the mountains shake with its swelling.
+      </div>
+    </div>
+
+
+   <div class="prayer-card">
+      <div class="title">Psalm 61:2</div>
+      <div class="description">
+        From the end of the earth I will cry to You, when my heart is overwhelmed; lead me to the rock that is higher than I.
+     </div>
+    </div>
+
+ <div class="prayer-card">
+      <div class="title">II Corinthians 4:16</div>
+      <div class="description">
+        Therefore we do not lose heart. Even though our outward man is perishing, yet the inward man is being renewed day by day.
+     </div>
+    </div>
+
+<div class="prayer-card">
+      <div class="title">Overcome Loneliness</div>
+      <div class="description">
+Overcome Loneliness with these verses
+     </div>
+    </div>
+
+
+<div class="prayer-card">
+      <div class="title">Psalm 27:10</div>
+      <div class="description">
+When my father and my mother forsake me, then the Lord will take care of me.
+     </div>
+    </div>
+
+<div class="prayer-card">
+      <div class="title">Psalm 34:18</div>
+      <div class="description">
+The Lord is near to those who have a broken heart, and saves such as have a contrite spirit.
+     </div>
+    </div>
+
+
+<div class="prayer-card">
+      <div class="title">Isaiah 43:2</div>
+      <div class="description">
+When you pass through the waters, I will be with you; and through the rivers, they shall not overflow you. When you walk through the fire, you shall not be burned, nor shall the flame scorch you.
+     </div>
+    </div>
+
+<div class="prayer-card">
+      <div class="title">Zephaniah 3:17</div>
+      <div class="description">
+The Lord your God in your midst, the Mighty One, will save; He will rejoice over you with gladness, He will quiet you with His love, He will rejoice over you with singing.
+     </div>
+    </div>
+
+<div class="prayer-card">
+      <div class="title">Matthew 28:20</div>
+      <div class="description">
+Lo, I am with you always, even to the end of the age.
+     </div>
+    </div>
+
+<div class="prayer-card">
+      <div class="title">Hebrews 13:5</div>
+      <div class="description">
+For He Himself has said, “I will never leave you nor forsake you.”
+     </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="votd-ref" class="votd-ref"></div>
+</div>
+
+<div style="text-align: center; margin-bottom: 10px;"><input type="text" id="apiKeyInput" placeholder="Enter OpenRouter API Key, Empty for Default" style="width: 60%; display: inline-block;" /> <button onclick="saveApiKey()">Save</button></div>
+<h2>Bible GPT</h2>
+<select id="book" onchange="updateChapters()">
+<option value="" selected="selected">Select a Book</option>
+</select><select id="chapter">
+<option value="" selected="selected">Select a Chapter</option>
+</select>
+<script>
+const booksProtestant = {
+  "Genesis": 50, "Exodus": 40, "Leviticus": 27, "Numbers": 36, "Deuteronomy": 34,
+  "Joshua": 24, "Judges": 21, "Ruth": 4, "1 Samuel": 31, "2 Samuel": 24,
+  "1 Kings": 22, "2 Kings": 25, "1 Chronicles": 29, "2 Chronicles": 36,
+  "Ezra": 10, "Nehemiah": 13, "Esther": 10, "Job": 42, "Psalms": 150,
+  "Proverbs": 31, "Ecclesiastes": 12, "Song of Songs": 8,
+  "Isaiah": 66, "Jeremiah": 52, "Lamentations": 5, "Ezekiel": 48, "Daniel": 12,
+  "Hosea": 14, "Joel": 3, "Amos": 9, "Obadiah": 1, "Jonah": 4,
+  "Micah": 7, "Nahum": 3, "Habakkuk": 3, "Zephaniah": 3,
+  "Haggai": 2, "Zechariah": 14, "Malachi": 4,
+  "Matthew": 28, "Mark": 16, "Luke": 24, "John": 21, "Acts": 28,
+  "Romans": 16, "1 Corinthians": 16, "2 Corinthians": 13,
+  "Galatians": 6, "Ephesians": 6, "Philippians": 4,
+  "Colossians": 4, "1 Thessalonians": 5, "2 Thessalonians": 3,
+  "1 Timothy": 6, "2 Timothy": 4, "Titus": 3, "Philemon": 1,
+  "Hebrews": 13, "James": 5, "1 Peter": 5, "2 Peter": 3,
+  "1 John": 5, "2 John": 1, "3 John": 1, "Jude": 1,
+  "Revelation": 22
+};
+
+const booksCatholic = {
+  ...booksProtestant,
+  "Tobit": 14,
+  "Judith": 16,
+  "1 Maccabees": 16,
+  "2 Maccabees": 15,
+  "Wisdom": 19,
+  "Sirach": 51,
+  "Baruch": 6
+};
+
+let books = booksProtestant;
+
+function populateBooks() {
+  const bookDropdown = document.getElementById("book");
+  bookDropdown.innerHTML = `<option value="" selected>Select a Book</option>`;
+
+  for (const book in books) {
+    const option = document.createElement("option");
+    option.value = book;
+    option.textContent = book;
+    bookDropdown.appendChild(option);
+  }
+}
+// Initial load
+populateBooks();
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  populateBooks();
+
+  const toggle = document.getElementById("shortToggle");
+  if (!toggle) return; // safety guard
+
+  toggle.addEventListener("change", function () {
+    books = this.checked ? booksCatholic : booksProtestant;
+
+    localStorage.removeItem("selectedBook");
+    localStorage.removeItem("selectedChapter");
+
+    populateBooks();
+
+    document.getElementById("chapter").innerHTML =
+      `<option value="" selected>Select a Chapter</option>`;
+  });
+
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    const toggle = document.getElementById("darkModeToggle");
+    const savedTheme = localStorage.getItem("theme");
+
+    // Restore theme
+    if (savedTheme === "dark") {
+        document.body.classList.add("dark");
+        toggle.checked = true;
+    }
+
+    // When user toggles
+    toggle.addEventListener("change", function () {
+        if (this.checked) {
+            document.body.classList.add("dark");
+            localStorage.setItem("theme", "dark");
+        } else {
+            document.body.classList.remove("dark");
+            localStorage.setItem("theme", "light");
+        }
+    });
+});
+
+document.addEventListener("DOMContentLoaded", function() {
+    const pvToggle = document.getElementById("PVToggle");
+    const prayerSection = document.getElementById("prayerSection");
+
+    // Restore saved state or default to checked
+    const savedPV = localStorage.getItem("PVToggle");
+    if (savedPV !== null) {
+        pvToggle.checked = savedPV === "true";
+    } else {
+        pvToggle.checked = true; // default on
+    }
+
+    // Apply initial visibility
+    prayerSection.style.display = pvToggle.checked ? "block" : "none";
+
+    // When user toggles
+    pvToggle.addEventListener("change", function() {
+        prayerSection.style.display = this.checked ? "block" : "none";
+        localStorage.setItem("PVToggle", this.checked);
+    });
+});
+
+
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const shortToggle = document.getElementById("shortToggle");
+  if (!shortToggle) return;
+
+  // Restore saved state
+  const saved = localStorage.getItem("shortToggle");
+  if (saved !== null) {
+    shortToggle.checked = saved === "true";
+  }
+
+  // Apply canon immediately on load
+  books = shortToggle.checked ? booksCatholic : booksProtestant;
+  populateBooks();
+
+  // Save + react to changes
+  shortToggle.addEventListener("change", function () {
+    localStorage.setItem("shortToggle", this.checked);
+
+    books = this.checked ? booksCatholic : booksProtestant;
+
+    localStorage.removeItem("selectedBook");
+    localStorage.removeItem("selectedChapter");
+
+    populateBooks();
+
+    document.getElementById("chapter").innerHTML =
+      `<option value="" selected>Select a Chapter</option>`;
+  });
+});
+
+// Save custom language text live
+document.addEventListener("DOMContentLoaded", () => {
+    const otherInput = document.getElementById("otherLang");
+
+    otherInput.addEventListener("input", function () {
+        localStorage.setItem("customLangText", this.value.trim());
+    });
+});
+
+// Model Select
+
+document.addEventListener("DOMContentLoaded", function () {
+    const modelToggle = document.getElementById("modelModeToggle");
+    const modelSelect = document.getElementById("modelSelect");
+
+    // Restore toggle state
+    const savedToggle = localStorage.getItem("modelModeToggle");
+    modelToggle.checked = savedToggle === "true";
+
+    // Restore selected model
+    const savedModel = localStorage.getItem("selectedModel");
+    if (savedModel) {
+        modelSelect.value = savedModel;
+    }
+
+    // Apply visibility
+    modelSelect.style.display = modelToggle.checked ? "block" : "none";
+
+    // When toggle changes
+    modelToggle.addEventListener("change", function () {
+        localStorage.setItem("modelModeToggle", this.checked);
+        modelSelect.style.display = this.checked ? "block" : "none";
+    });
+
+    // When model changes
+    modelSelect.addEventListener("change", function () {
+        localStorage.setItem("selectedModel", this.value);
+    });
+});
+
+
+
+</script>
+<select id="queryType">
+<option value="">Select an option</option>
+<option value="Explain">Explain</option>
+<option value="Teach">Teach</option>
+<option value="Summarize">Summarize</option>
+<option value="Give similar verse to">Give similar verse to</option>
+<option value="Break down verse by verse">Break down verse by verse</option>
+</select><select id="langSelect" onchange="updateLang()">
+<option value="">Select a Language</option>
+<option value="English" selected="selected">English</option>
+<option value="Chinese (Simplified)">汉语 (简化)</option>
+<option value="Chinese (Traditional)">中文 (传统)</option>
+<option value="Filipino">Filipino</option>
+<option value="Japanese">日本語</option>
+<option value="Korean">한국어</option>
+<option value="Russian">Русский</option>
+<option value="Hindi">अंग्रेज़ी</option>
+<option value="Others">Others</option>
+</select><input type="text" id="otherLang" maxlength="10" placeholder="Say Hello in your language" style="display: none; width: 50%; margin-top: 10px;" />
+<div class="toggle-row"><!-- Catholic --> <label class="form-switch"> <input type="checkbox" id="shortToggle" /> <i></i> <span>Catholic</span></label> <!-- Model --> <label class="form-switch"> <input type="checkbox" id="modelModeToggle" /> <i></i> <span>Model</span> </label><select id="modelSelect" style="display: none; width: 50%; margin-top: 5px;">
+<option disabled="disabled">Preferred Models</option>
+<option value="google/gemma-3n-e4b-it:free">Google Gemma 3n 4B (Default)</option>
+<option value="google/gemma-3n-e2b-it:free">Google Gemma 3n</option>
+<option value="nvidia/nemotron-3-nano-30b-a3b:free">NVIDIA Nemotron 3 Nano</option>
+<option disabled="disabled">Others</option>
+<option value="openai/gpt-oss-20b:free">OpenAI GPT-OSS 20B</option>
+<option value="meta-llama/llama-3.3-70b-instruct:free">Meta Llama 3.3 70B</option>
+<option disabled="disabled">Random</option>
+<option value="openrouter/free" selected="selected">Any Available Model</option>
+</select><!-- Dark Mode --> <label class="form-switch"> <input type="checkbox" id="darkModeToggle" /> <i></i> <span>Dark Mode</span> </label> <!-- VOTD Mode --> <label class="form-switch"> <input type="checkbox" id="VOTDModeToggle" checked="checked" /> <i></i> <span>Verse of the Day</span> </label><!-- Prayer Mode --><label class="form-switch"><input type="checkbox" id="PVToggle" checked="checked" /> <i></i> <span>Prayer Verses</span> </label></div>
+
+<br /><br /><button onclick="searchBible()">Search</button>
+<h6><a href="andromoV3://custompage_1742785817_d1ce4efcde"> <span style="text-decoration: underline;">🚩 Found an error? Report it in the app menu under Contact Us. 🚩</span> </a></h6>
+<h3>Response:</h3>
+<button id="copyButton" onclick="copyToClipboard()">Copy to Clipboard</button><br />
+<div id="response" class="response-box"><i>Waiting for your request. If no response or error, Click Model toggle above and choose a different model or try again later</i>.</div>
+</div>
+</body>
+</html>

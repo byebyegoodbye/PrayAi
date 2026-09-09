@@ -1,0 +1,2144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ask a Question</title> 
+
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+     
+:root {
+    --bg-body: #f4f4f4;
+    --bg-container: #ffffff;
+    --text-main: #333;
+    --bg-input: #ffffff;
+    --border-color: #ccc;
+    --bg-response: #e9ecef;
+}
+
+body.dark {
+    --bg-body: #121212;
+    --bg-container: #1e1e1e;
+    --text-main: #e0e0e0;
+    --bg-input: #2a2a2a;
+    --border-color: #444;
+    --bg-response: #2a2a2a;
+}
+
+body.dark textarea::placeholder {
+    color: #9aa0a6;
+}
+
+ body {
+    font-family: Arial, sans-serif;
+    background-color: var(--bg-body);
+    color: var(--text-main);
+    text-align: center;
+    padding: 40px;
+}
+
+/* Mobile correction */
+@media (max-width: 600px) {
+    body {
+        padding: 16px;
+    }
+}
+
+      .container {
+    width: 100%;
+    max-width: 720px; /* classic, readable width */
+    background: var(--bg-container);
+    padding: 20px;
+    margin: auto;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+}
+
+
+	 textarea {
+            width: 100%;
+            padding: 10px;
+	    max-width: 95%;   /* ideal reading width */
+            margin: 10px auto;  /* center it */
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-top: 10px;
+	    color: var(--text-main);
+            background-color: var(--bg-input);
+            box-shadow: inset 1px 1px 5px rgba(0, 0, 0, 0.1);
+            resize: vertical; /* Allows vertical resizing only */
+            min-height: 50px;
+            max-height: 200px; /* Prevents excessive expansion */
+            overflow-y: auto;
+        }
+
+        h2 {
+            color: var(--text-main);
+        }
+        select, input {
+            width: 100%;
+            padding: 10px;		
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-top: 10px;
+            background-color: #fff;
+            box-shadow: inset 1px 1px 5px rgba(0, 0, 0, 0.1);
+        }
+        #apiKeyInput {
+            width: 60%;
+            font-size: 12px;
+            padding: 5px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .response-box {
+		
+            margin-top: 20px;
+            padding: 15px;
+            background: var(--bg-response);
+            border-radius: 5px;
+            text-align: left;
+            font-size: 16px;
+            color: var(--text-main);
+            white-space: pre-wrap;
+        }
+	/* Choice Chips */
+	.chip-group {
+    	display: flex;
+   	 justify-content: center;
+   	 gap: 10px;
+   	 flex-wrap: wrap;
+    	margin-top: 12px;
+	}
+
+	.chip {
+   	 padding: 8px 14px;
+    	border-radius: 20px;
+   	 border: 2px solid #007BFF;
+   	 background: #fff;
+   	 color: #007BFF;
+   	 cursor: pointer;
+    	font-size: 14px;
+    	user-select: none;
+    	transition: all 0.2s ease;
+	}
+
+	.chip.selected {
+    	background: #007BFF;
+    	color: #fff;
+	}
+
+
+	.form-switch {
+  display: inline-block;
+  min-width: 20px; /* prevents squishing */
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.form-switch i {
+  position: relative;
+  display: inline-block;
+  margin-right: .5rem;
+  width: 46px;
+  height: 26px;
+  background-color: #e6e6e6;
+  border-radius: 23px;
+  vertical-align: text-bottom;
+  transition: all 0.3s linear;
+}
+.form-switch i::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 42px;
+  height: 22px;
+  background-color: #f2f2f2;
+  border-radius: 11px;
+  transform: translate3d(2px, 2px, 0) scale3d(1, 1, 1);
+  transition: all 0.25s linear;
+}
+.form-switch i::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 22px;
+  height: 22px;
+  background-color: #b8b6b6;
+  border-radius: 11px;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.24);
+  transform: translate3d(2px, 2px, 0);
+  transition: all 0.2s ease-in-out;
+}
+.form-switch:active i::after {
+  width: 28px;
+  transform: translate3d(2px, 2px, 0);
+}
+.form-switch:active input:checked + i::after { transform: translate3d(16px, 2px, 0); }
+.form-switch input { display: none; }
+.form-switch input:checked + i { background-color: #4BD763; }
+.form-switch input:checked + i::before { transform: translate3d(18px, 2px, 0) scale3d(0, 0, 0); }
+.form-switch input:checked + i::after { transform: translate3d(22px, 2px, 0); }
+
+.toggle-row {
+    display: flex;
+    flex-wrap: wrap;          /* allow wrapping */
+    justify-content: center;  /* keep centered */
+    gap: 16px;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+
+
+
+.review-card {
+ 
+    background: var(--bg-input);
+    margin: 40px auto;
+    border-radius: 12px;
+    box-shadow: 0 1px 4px rgba(0,0,0,.15);
+    padding: 10px;
+    display: none; /* hidden by default */
+
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+
+}
+
+.header img {
+    height: 24px;
+}
+
+
+.avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #ccc;
+}
+
+.rating-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.rating-row i {
+    font-size: 22px;
+    color: #007BFF;
+}
+
+.rating-row i.inactive {
+    color: #dadce0;
+}
+
+textarea {
+    width: 90%;
+    height: 20px;
+    border: 1px solid #dadce0;
+    border-radius: 6px;
+    font-size: 14px;
+    resize: none;
+    outline: none;
+}
+
+textarea::placeholder {
+    color: #80868b;
+}
+
+.helper-text {
+    font-size: 12px;
+    color: #5f6368;
+    margin-top: 6px;
+}
+
+.actions {
+    display: flex;
+    justify-content: space-between;
+}
+
+button {
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+    border: none;
+}
+
+.btn-submit {
+    background: #007BFF;
+     align-items: center;
+}
+
+.update-section {
+  display: none; /* HIDDEN BY DEFAULT */
+  background: var(--bg-input);
+  padding: 5px;
+  margin-top: 30px;   /*  THIS ADDS THE GAP */
+  margin-bottom: 10px;
+  border-radius: 12px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.app-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 20px;
+  object-fit: cover;
+}
+
+.app-info {
+  flex: 1;
+}
+
+.app-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.app-dev {
+  color: #666;
+  margin-top: 5px;
+}
+
+.button-group {
+  display: flex;
+}
+
+.btn-uninstall {
+  flex: 1;
+  padding: 12px;
+  background-color: #f1f3f4;
+  color: #333;
+  border: none;
+  border-radius: 25px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.btn-uninstall:hover {
+  background-color: #e0e0e0;
+}
+
+.btn-update {
+  flex: 1;
+  padding: 12px;
+  background-color: #0f9d58;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-update:hover {
+  background-color: #0c7c45;
+}
+
+@media (max-width: 600px) {
+  .app-header {
+    flex-direction: column;
+    text-align: center;
+  }
+  .button-group {
+    flex-direction: column;
+  }
+}
+
+/* ==============================
+   CONVERSATIONAL CHAT UI
+   ============================== */
+
+.chat-window {
+    width: 100%;
+    max-width: 720px;
+    margin: 20px auto 0;
+    min-height: 280px;
+    max-height: 600px;
+    overflow-y: auto;
+    padding: 10px 4px 20px;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+}
+
+/* Empty state */
+
+.chat-empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-main);
+    opacity: .75;
+}
+
+.chat-empty .chat-icon {
+    font-size: 42px;
+    margin-bottom: 10px;
+}
+
+.chat-empty h3 {
+    margin: 5px 0;
+    font-size: 20px;
+}
+
+.chat-empty p {
+    margin: 5px 0;
+    font-size: 14px;
+    opacity: .7;
+}
+
+
+/* Message rows */
+
+.chat-message {
+    display: flex;
+    width: 100%;
+    margin: 12px 0;
+    animation: messageAppear .2s ease-out;
+}
+
+.chat-message.user {
+    justify-content: flex-end;
+}
+
+.chat-message.ai {
+    justify-content: flex-start;
+}
+
+
+/* Message bubbles */
+
+.message-bubble {
+    max-width: 78%;
+    padding: 12px 15px;
+    border-radius: 18px;
+    font-size: 16px;
+    line-height: 1.5;
+    text-align: left;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+}
+
+/* User */
+
+.chat-message.user .message-bubble {
+    background: #007BFF;
+    color: white;
+    border-bottom-right-radius: 5px;
+}
+
+/* AI */
+
+.chat-message.ai .message-bubble {
+    background: var(--bg-response);
+    color: var(--text-main);
+    border-bottom-left-radius: 5px;
+}
+
+
+/* AI label */
+
+.ai-label {
+    font-size: 11px;
+    opacity: .55;
+    margin: 0 0 4px 10px;
+}
+
+
+/* Composer */
+
+.chat-composer {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    width: 100%;
+    max-width: 720px;
+    margin: 10px auto 0;
+    padding: 8px;
+    box-sizing: border-box;
+
+    background: var(--bg-input);
+    border: 1px solid var(--border-color);
+    border-radius: 24px;
+}
+
+
+/* Input */
+
+.chat-composer textarea {
+    flex: 1;
+    width: auto;
+    max-width: none;
+    min-height: 42px;
+    max-height: 140px;
+    margin: 0;
+
+    padding: 10px 12px;
+
+    border: none;
+    outline: none;
+    resize: none;
+
+    background: transparent;
+    color: var(--text-main);
+
+    font-size: 16px;
+    line-height: 1.4;
+
+    box-shadow: none;
+}
+
+.chat-composer textarea:focus {
+    border: none;
+    outline: none;
+    box-shadow: none;
+}
+
+
+/* Send button */
+
+.send-button {
+    flex: 0 0 42px;
+
+    width: 42px;
+    height: 42px;
+
+    padding: 0;
+    margin: 0;
+
+    border-radius: 50%;
+    background: #007BFF;
+    color: white;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 16px;
+}
+
+.send-button:hover {
+    background: #0056b3;
+}
+
+
+/* Loading */
+
+.typing {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    padding: 5px 2px;
+}
+
+.typing span {
+    width: 7px;
+    height: 7px;
+    background: currentColor;
+    border-radius: 50%;
+    opacity: .5;
+    animation: typingBounce 1.2s infinite;
+}
+
+.typing span:nth-child(2) {
+    animation-delay: .15s;
+}
+
+.typing span:nth-child(3) {
+    animation-delay: .3s;
+}
+
+
+@keyframes typingBounce {
+    0%, 60%, 100% {
+        transform: translateY(0);
+    }
+
+    30% {
+        transform: translateY(-4px);
+    }
+}
+
+@keyframes messageAppear {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* Mobile */
+
+@media (max-width: 600px) {
+
+    .chat-window {
+        min-height: 250px;
+        max-height: 65vh;
+        padding-left: 2px;
+        padding-right: 2px;
+    }
+
+    .message-bubble {
+        max-width: 85%;
+        font-size: 15px;
+    }
+
+    .chat-composer {
+        border-radius: 22px;
+    }
+
+    .chat-composer textarea {
+        font-size: 16px;
+    }
+}
+
+
+
+    	</style>
+
+<script>
+let bulkData = JSON.parse(localStorage.getItem("bulkPrayers")) || [];
+
+
+</script>
+
+
+    <script>
+        let apiKey = localStorage.getItem("apiKey") || '';
+	let lastUserPrayerText = "";
+
+        function saveApiKey() {
+            const inputKey = document.getElementById("apiKeyInput").value.trim();
+
+            if (inputKey) {
+                apiKey = inputKey;
+                localStorage.setItem("apiKey", inputKey);
+                alert("API Key updated successfully!");
+            } else {
+                apiKey = '';
+                localStorage.removeItem("apiKey");
+                alert("Using default API Key.");
+            }
+        }
+
+       async function copyToClipboard() {
+
+    // Find the latest AI response in the chat
+    const aiMessages = document.querySelectorAll(
+        "#chatWindow .chat-message.ai .message-bubble"
+    );
+
+    if (!aiMessages.length) {
+        alert("There is no response to copy yet.");
+        return;
+    }
+
+    const latestResponse =
+        aiMessages[aiMessages.length - 1];
+
+    // innerText gives us the readable text without HTML tags
+    const responseText = latestResponse.innerText.trim();
+
+    if (!responseText) {
+        alert("There is no response to copy yet.");
+        return;
+    }
+
+    try {
+
+        await navigator.clipboard.writeText(responseText);
+
+        alert("Copied to clipboard!");
+
+    } catch (error) {
+
+        console.error("Clipboard API failed:", error);
+
+        // Fallback for WebView / older browsers
+        const textArea = document.createElement("textarea");
+
+        textArea.value = responseText;
+        textArea.style.position = "fixed";
+        textArea.style.left = "-9999px";
+
+        document.body.appendChild(textArea);
+
+        textArea.focus();
+        textArea.select();
+
+        try {
+            document.execCommand("copy");
+            alert("Copied to clipboard!");
+        } catch (fallbackError) {
+            alert("Unable to copy. Please select the text manually.");
+            console.error("Fallback copy failed:", fallbackError);
+        }
+
+        document.body.removeChild(textArea);
+    }
+}
+
+function addChatMessage(type, text, isHTML = false) {
+
+    const chatWindow = document.getElementById("chatWindow");
+    const empty = document.getElementById("chatEmpty");
+
+    if (empty) {
+        empty.remove();
+    }
+
+    const row = document.createElement("div");
+    row.className = `chat-message ${type}`;
+
+    const wrapper = document.createElement("div");
+
+    if (type === "ai") {
+        const label = document.createElement("div");
+        label.className = "ai-label";
+        label.innerText = "PRAY.AI";
+        wrapper.appendChild(label);
+    }
+
+    const bubble = document.createElement("div");
+    bubble.className = "message-bubble";
+
+    if (isHTML) {
+        bubble.innerHTML = text;
+    } else {
+        bubble.textContent = text;
+    }
+
+    wrapper.appendChild(bubble);
+    row.appendChild(wrapper);
+
+    chatWindow.appendChild(row);
+
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+
+    return bubble;
+}
+
+
+function addTypingMessage() {
+
+    const chatWindow = document.getElementById("chatWindow");
+    const empty = document.getElementById("chatEmpty");
+
+    if (empty) {
+        empty.remove();
+    }
+
+    const row = document.createElement("div");
+    row.className = "chat-message ai";
+    row.id = "typingMessage";
+
+    const wrapper = document.createElement("div");
+
+    const label = document.createElement("div");
+    label.className = "ai-label";
+    label.innerText = "PRAY.AI";
+
+    const bubble = document.createElement("div");
+    bubble.className = "message-bubble";
+
+    bubble.innerHTML = `
+        <div class="typing">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    `;
+
+    wrapper.appendChild(label);
+    wrapper.appendChild(bubble);
+    row.appendChild(wrapper);
+
+    chatWindow.appendChild(row);
+
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+}
+
+
+function removeTypingMessage() {
+    const typing = document.getElementById("typingMessage");
+
+    if (typing) {
+        typing.remove();
+    }
+}
+
+ async function searchBiblePrayer() {
+
+    const prayerInputEl = document.getElementById("prayerInput");
+    const originalText = prayerInputEl.value.trim();
+
+    const queryTypeEl = document.getElementById("queryType");
+    const queryType = queryTypeEl.value;
+
+    const isBulk = document.getElementById("BulkToggle").checked;
+
+    const short =
+        document.getElementById("shortToggle").checked
+            ? " Keep it short and sweet."
+            : "";
+
+    const catholic =
+        document.getElementById("catholicToggle").checked
+            ? " Style: Make it Catholic style, featuring structured repetitive prayers (Hail Mary, Our Father, Glory be) integrated with meditation on the mysteries of Gospel events. Beseech Mother Mary and/or the saints to intercede."
+            : "";
+
+    const emoji =
+        document.getElementById("emojiToggle").checked
+            ? " Please include appropriate emoji in the response."
+            : "";
+
+    let userQuestion = originalText;
+
+    // ==============================
+    // BULK PRAYER
+    // ==============================
+
+    if (isBulk) {
+
+        if (!bulkData.length) {
+            document.getElementById("response").innerText =
+                "Please add at least one person to the group prayer.";
+            return;
+        }
+
+        userQuestion = bulkData
+            .filter(p => p.name && p.request)
+            .map(p => `For ${p.name}: ${p.request}`)
+            .join(". ");
+    }
+
+    // ==============================
+    // VALIDATION
+    // ==============================
+
+    document.getElementById("adviceButton").style.display = "none";
+
+    if (!apiKey) {
+        document.getElementById("response").innerText =
+            "API Key is required. Please enter and save your key.";
+        return;
+    }
+
+    if (!userQuestion) {
+        document.getElementById("response").innerText =
+            "Please enter your query.";
+        return;
+    }
+
+    lastUserPrayerText = userQuestion;
+
+    // ==============================
+    // DETERMINE QUERY TYPE
+    // ==============================
+
+    let messages = [];
+
+    if (queryType === "pray") {
+
+        // ==========================================
+        // PRAYER MODE
+        // Only send the full prayer query
+        // ==========================================
+
+        const fullQuery = `
+Bible Prayer Request: ${userQuestion}.
+
+Please use Scriptural Verses and exclude notes.
+Assume you are praying.
+Elaborately weave the prayer into the verses.
+Please do not start a paragraph with a verse but include the verse within.
+Make it seamless like a pastor praying naturally.
+${catholic}
+${short}
+${emoji}
+
+Always end the prayer with:
+In Jesus Name, Amen
+
+The ending must be in the language of the prayer request.
+
+If possible, slightly elaborate the prayer and include 2 or more verses.
+
+Reply in the language of the Prayer Request, inclusive of the ending.
+`;
+
+        messages = [
+            {
+                role: "user",
+                content: fullQuery
+            }
+        ];
+
+    } else {
+
+        // ==========================================
+        // WORK ASSISTANT MODE
+        // Send:
+        // SYSTEM INSTRUCTIONS
+        // WORK GUIDE
+        // USER QUERY
+        // ==========================================
+
+        messages = [
+            {
+                role: "system",
+                content: SYSTEM_INSTRUCTIONS
+            },
+            {
+                role: "system",
+                content: WORK_GUIDE
+            },
+            {
+                role: "user",
+                content: userQuestion
+            }
+        ];
+    }
+
+    // ==============================
+    // CHAT UI
+    // ==============================
+
+    addChatMessage("user", userQuestion);
+    addTypingMessage();
+
+    // ==============================
+    // MODEL
+    // ==============================
+
+    const apiURL =
+        "https://openrouter.ai/api/v1/chat/completions";
+
+    const modelToggleEl =
+        document.getElementById("modelModeToggle");
+
+    const modelSelectEl =
+        document.getElementById("modelSelect");
+
+    const savedModel =
+        localStorage.getItem("selectedModel");
+
+    if (savedModel) {
+        modelSelectEl.value = savedModel;
+    }
+
+    const selectedModel = modelToggleEl.checked
+        ? (modelSelectEl.value || "openrouter/free")
+        : "openrouter/free";
+
+
+    // API REQUEST
+
+    const payload = {
+        model: selectedModel,
+        messages: messages
+    };
+
+    try {
+
+        const response = await fetch(apiURL, {
+            method: "POST",
+
+            headers: {
+                "Authorization": `Bearer ${apiKey}`,
+                "Content-Type": "application/json",
+                "HTTP-Referer": "Pray-Ai",
+                "X-Title": "Pray-Ai"
+            },
+
+            body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+
+        let responseText =
+            result?.choices?.[0]?.message?.content ||
+            "No response received. Please try again later or select Model toggle.";
+
+        // Formatting
+        responseText =
+            responseText.replace(
+                /\*\*(.*?)\*\*/g,
+                "<strong>$1</strong>"
+            );
+
+        responseText =
+            responseText.replace(
+                /\*(.*?)\*/g,
+                "• $1"
+            );
+
+        removeTypingMessage();
+
+        addChatMessage("ai", responseText, true);
+
+        // Only show advice button for prayer mode
+        if (queryType === "pray") {
+            document.getElementById("adviceButton").style.display =
+                "inline-block";
+        }
+
+    } catch (error) {
+
+        removeTypingMessage();
+
+        addChatMessage(
+            "ai",
+            "Error: " + error.message
+        );
+    }
+}
+
+// function for advise
+
+async function getAdvice() {
+
+    const adviceButton =
+        document.getElementById("adviceButton");
+
+    // Hide button while generating advice
+    adviceButton.style.display = "none";
+
+    const modelToggleEl =
+        document.getElementById("modelModeToggle");
+
+    const modelSelectEl =
+        document.getElementById("modelSelect");
+
+    const prayerText =
+        lastUserPrayerText || "";
+
+    if (!prayerText) {
+
+        addChatMessage(
+            "ai",
+            "Please generate a prayer first before asking for advice."
+        );
+
+        return;
+    }
+
+    const selectedModel =
+        modelToggleEl.checked
+            ? (modelSelectEl.value || "openrouter/free")
+            : "openrouter/free";
+
+
+    // ADVICE QUERY
+
+
+    const adviceQuery = `
+${prayerText}
+
+Give me practical advice for the issues mentioned in the prayer above.
+
+Do not repeat the prayer.
+
+Do not talk about prayer, Scripture, God, or religious matters.
+
+Keep the response strictly focused on practical advice.
+
+Make the advice clear, concise and practical where possible.
+
+Reply in the same language as the Prayer Request.
+`;
+    // SHOW TYPING INDICATOR
+
+    addTypingMessage();
+    try {
+
+        const response = await fetch(
+            "https://openrouter.ai/api/v1/chat/completions",
+            {
+                method: "POST",
+
+                headers: {
+                    "Authorization": `Bearer ${apiKey}`,
+                    "Content-Type": "application/json",
+                    "HTTP-Referer": "Pray-Ai",
+                    "X-Title": "Pray-Ai"
+                },
+
+                body: JSON.stringify({
+
+                    model: selectedModel,
+
+                    messages: [
+                        {
+                            role: "user",
+                            content: adviceQuery
+                        }
+                    ]
+
+                })
+            }
+        );
+
+
+        const result = await response.json();
+
+
+
+        // CHECK API ERROR
+
+        if (!response.ok) {
+
+            throw new Error(
+                result?.error?.message ||
+                `API request failed (${response.status})`
+            );
+        }
+
+        let responseText =
+            result?.choices?.[0]?.message?.content ||
+            "No advice received. Please try again later or select Model toggle.";
+ 
+        // FORMAT RESPONSE
+        responseText = responseText.replace(
+            /\*\*(.*?)\*\*/g,
+            "<strong>$1</strong>"
+        );
+
+        responseText = responseText.replace(
+            /\*(.*?)\*/g,
+            "• $1"
+        );
+  
+        // REMOVE TYPING
+
+        removeTypingMessage();
+
+        // ADD ADVICE TO CHAT
+
+        addChatMessage(
+            "ai",
+            responseText,
+            true
+        );
+
+    } catch (error) {
+
+        removeTypingMessage();
+
+        console.error("Advice error:", error);
+
+        addChatMessage(
+            "ai",
+            "Unable to get advice: " + error.message
+        );
+    }
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const input = document.getElementById("prayerInput");
+
+    if (!input) return;
+
+    input.addEventListener("input", function () {
+
+        this.style.height = "auto";
+        this.style.height =
+            Math.min(this.scrollHeight, 140) + "px";
+
+    });
+
+    input.addEventListener("keydown", function (event) {
+
+        if (event.key === "Enter" && !event.shiftKey) {
+
+            event.preventDefault();
+
+            searchBiblePrayer();
+        }
+
+    });
+
+});
+
+// Knowledge Database
+
+const SYSTEM_INSTRUCTIONS = `
+You are the company's internal help.
+
+Answer questions using the provided work knowledge.
+
+`;
+
+const WORK_GUIDE = `
+
+CAPITASTAR@WORK — INTERNAL USER GUIDE
+
+
+CapitaStar@Work is a Workspace Experience App.
+
+The app allows users to:
+- Book spaces for business needs
+- Access buildings and office spaces
+- Use QR-based building access
+- Enrol for facial recognition where available
+- Invite visitors
+- View workplace events and deals
+- Search for food and retail offerings
+- Manage their profile
+- Link their CapitaStar account
+- View workplace-related updates and activities
+
+
+
+1. ACCOUNT CREATION
+
+
+To sign up or log in:
+
+1. Enter the user's country region.
+2. Enter the user's mobile number.
+3. Authenticate the mobile number using SMS OTP.
+4. Accept the Terms & Conditions.
+
+Users who have authorized access to the premises may receive a
+7-digit verification code.
+
+The verification code:
+- Is triggered by the tenant administrator/officer from the backend portal.
+- Is sent via email.
+- Is valid for 30 days.
+- Is required to activate authorized building access.
+
+If the user has a verification code:
+1. Enter the verification code in the provided field.
+2. Continue with the enrollment process.
+
+If the user does not have a verification code:
+- Select "I do not have a verification code".
+
+IMPORTANT:
+Do not invent alternative verification procedures.
+If the user has an issue with a verification code and the guide does
+not provide a solution, advise the user to contact the relevant
+administrator support channel.
+
+
+
+2. VERIFICATION CODE
+
+
+The Building Verification Code is a 7-character alphanumeric code.
+
+The verification code email is triggered by the tenant
+administrator/officer.
+
+The email is sent from:
+noreply-cswork.com
+
+Users can enter the verification code through:
+
+Menu > Manage Building Access
+
+The verification code is valid for 30 days from the date it is received.
+
+If the verification code has expired:
+- Contact cswork@capitastar.com
+
+Do not assume that an expired code can be extended or reused.
+
+
+3. HOME SCREEN
+
+
+The CapitaStar@Work Home Screen provides access to:
+
+- Events
+- Deals
+- What's Trending
+- Find Services
+- My ID
+- Profile Toggling
+- Service Messages
+- My Weekly Activities
+
+Events, Deals and What's Trending:
+- Provide workplace updates, curated events and promotions.
+
+Find Services:
+- Provides access to Utility and Lifestyle services.
+
+My ID:
+- Provides personalized dynamic QR codes for building access.
+
+Profile Toggling:
+- Allows users to toggle between buildings where applicable.
+
+Service Messages:
+- Important messages may be displayed on the Home Screen.
+
+My Weekly Activities:
+- Allows users to view key activities for the week at a glance.
+
+
+
+4. FIND SERVICES
+
+Features are grouped into:
+
+UTILITY
+- Functions related to workplace needs.
+
+LIFESTYLE
+- Functions related to lifestyle and community offerings.
+
+The app allows users to customize their top 3 features.
+
+When helping a user locate a function:
+- Direct the user to Find Services if the function is not immediately
+  visible on the Home Screen.
+
+
+5. MY ID 
+
+My ID provides a personalized QR code.
+
+After the building verification code has been successfully entered,
+the user's QR code will be activated.
+
+To access the QR code:
+1. Select My ID.
+2. Display the personalized QR code.
+
+Depending on the building and available access modes, users may be
+able to toggle between different access modes.
+
+QR access can be used for:
+- Turnstile access
+- Door access
+
+The QR code may also be used for Fire Warden attendance during
+an emergency.
+
+IMPORTANT:
+Available access modes may differ depending on the building.
+
+
+
+6. FACIAL RECOGNITION
+
+
+Facial Recognition enrollment is available where supported.
+
+To enrol:
+
+1. Select:
+   Menu > My Building Access
+
+2. Enter the verification code sent to the user's mailbox.
+   This step may be skipped if the verification code was already
+   entered during sign-up.
+
+3. Scroll through the instructions.
+
+4. Select "Proceed".
+
+5. Use the phone camera to take the required picture.
+
+6. Select "Activate" under Facial Recognition.
+
+7. Read the Terms & Conditions.
+
+8. Select "Agree & Proceed".
+
+9. Wait for the picture to be approved.
+
+Once approved:
+- The status changes to "Active".
+- The user can use Facial Recognition.
+
+If the user needs to take the photo again:
+- Select "Re-Enroll".
+
+
+
+7. BOOK SPACE
+
+Users can book available spaces through the Book Space function.
+
+To book a space:
+
+1. From the Home Screen, select "Book Space".
+2. Select a room OR use the dynamic search.
+3. Select the preferred space.
+4. Check availability.
+5. Choose the required date and time.
+6. Enter the meeting room title.
+7. Enter any additional request if required.
+8. Accept the Terms & Conditions.
+9. Complete payment where applicable.
+10. Select "Done" to return to the Home Screen.
+
+Alternatively:
+- Select "View your booking details" to view the receipt.
+
+A QR code for room access may be provided depending on the booking.
+
+
+SPACE CATEGORIES
+
+Spaces are categorized into:
+
+- Work
+- Event
+- Meet
+- Fun
+- Others
+
+
+
+8. INVITE VISITORS
+
+
+Users can invite visitors from the Home Screen.
+
+To invite visitors:
+
+1. From the Home Screen, select "Invite Visitors".
+2. Select "+ Invite Visitors".
+3. Select the required date.
+4. Up to 5 consecutive days can be selected.
+5. The building should be automatically populated.
+6. Select the relevant floor.
+7. Enter the visitor's:
+   - Name
+   - Mobile number OR email
+8. Select "Add another visitor" if additional visitors are required.
+9. Up to 10 visitors can be added.
+10. Select "Invite" to send the invitation.
+
+IMPORTANT:
+- Mobile number support is for local mobile numbers according to
+  the guide.
+
+
+RETURNING VISITORS
+
+For returning visitors:
+
+1. Select:
+   "Tap here if you have returning visitors"
+
+2. Select the visitor(s) from the list.
+
+3. Select:
+   "Add Visitor(s)"
+
+
+IMPORTANT:
+Do not invent visitor invitation rules beyond the information
+provided in this guide.
+
+
+
+9. RETAIL DIRECTORY
+
+
+Retail Directory allows users to search for food and retail
+offerings in and around their building.
+
+Users can:
+- Search by building.
+- Search by store name.
+
+If a user is looking for food or retail services around their
+workplace, direct them to the Retail Directory.
+
+
+
+10. DEALS
+
+
+Deals can be accessed from:
+
+Home Screen > Deals
+
+OR
+
+Find Services > Deals
+
+To redeem a deal:
+
+1. Select the preferred deal.
+2. Select "Redeem".
+
+If the user's CapitaStar account is linked:
+- The deal can be successfully redeemed after selecting "Redeem".
+
+If the user's CapitaStar account is not linked:
+- A popup will appear prompting the user to link the account.
+
+
+
+11. EVENTS
+
+
+Events can be accessed from the Home Screen.
+
+To see more events:
+1. Select Events.
+2. Scroll to the right.
+3. Select "See All".
+
+To register for an event:
+
+1. Select the desired event.
+2. Select "Attend".
+3. Select the available time slot(s).
+4. Proceed with payment where applicable.
+5. Once payment is completed, select "Done" to return to the Home Screen.
+
+Alternatively:
+- Select "View your booking details" to view the receipt.
+
+
+
+12. CAPITASTAR ACCOUNT LINKING
+
+
+Users with an existing CapitaStar account can link it to
+CapitaStar@Work.
+
+To link an existing CapitaStar account:
+1. Go to:
+   Menu > Link to CapitaStar
+2. Enter the CapitaStar mobile number.
+3. Verify the SMS OTP.
+
+Users without an existing CapitaStar account may sign up through:
+
+Menu > Link to CapitaStar
+
+Linking CapitaStar allows users to receive exclusive promotions
+and is required for certain Deals redemption flows.
+
+
+
+13. PROFILE / PERSONAL DETAILS
+
+
+Users can access their profile through:
+
+Home Screen > Menu > User Name
+
+To edit profile information:
+
+1. Select Menu.
+2. Select the user's name.
+3. Select "Edit Profile".
+4. Update the relevant information.
+5. Select Save.
+
+Users may update their email address.
+
+For mobile number changes:
+- The guide states that users should email us.
+
+
+
+14. MOBILE NUMBER / EMAIL CHANGES
+
+
+Email address:
+- Can be updated through Edit Profile.
+
+Mobile number:
+- Changes require emailing the support/contact channel according
+  to the guide.
+
+Some profile changes may require SMS 2FA validation.
+
+
+
+15. FEEDBACK / CONTACT US
+
+
+Users can provide feedback through:
+
+Home Screen > Contact Us 
+
+If a user wants to submit feedback about the app or service,
+direct them to Contact Us/Feedback.
+
+
+
+16. SUPPORT CONTACT
+
+
+For expired building verification codes:
+cswork@capitastar.com
+
+If the guide does not contain the answer to a user's question,
+do not fabricate a procedure.
+
+Instead say that the information is not available in the
+current CapitaStar@Work guide and, where appropriate, direct
+the user to the relevant support/contact channel.
+
+
+WHEN INFORMATION IS MISSING:
+Say:
+
+"I don't have that information in the current CapitaStar@Work
+guide. Please contact the relevant administrator or
+cswork@capitastar.com where applicable."
+
+
+
+18. QUICK FAQ
+
+
+Q: Where do I find my QR access code?
+A:
+Go to My ID. Once the building verification code has been entered
+successfully, the personalized QR code can be displayed there.
+
+Q: How long is the building verification code valid?
+A:
+30 days from receiving the verification code.
+
+Q: My verification code has expired. What should I do?
+A:
+Contact cswork@capitastar.com.
+
+Q: Where can I book a room?
+A:
+From the Home Screen, select Book Space.
+
+Q: How many visitors can I invite?
+A:
+Up to 10 visitors can be added to an invitation.
+
+Q: How many days can I select for a visitor invitation?
+A:
+Up to 5 consecutive days.
+
+Q: Where can I find Deals?
+A:
+From the Home Screen, select Deals, or go to Find Services > Deals.
+
+Q: Where can I find events?
+A:
+Select Events from the Home Screen. Select See All to view more events.
+
+Q: How do I find food around my building?
+A:
+Use the Retail Directory and search by building or store name.
+
+Q: How do I link my CapitaStar account?
+A:
+Go to Menu > Link to CapitaStar, enter the CapitaStar mobile number
+and verify the SMS OTP.
+
+Q: How do I update my email?
+A:
+Go to Menu > your name > Edit Profile and update the email address.
+
+Q: How do I provide feedback?
+A:
+Use Contact Us/Feedback.
+
+Q: Can I use Facial Recognition?
+A:
+Facial Recognition is available where supported. Go to
+Menu > My Building Access and follow the enrollment process.
+
+Q: Where can I find my building access?
+A:
+Go to Menu > My Building Access. The available access functions
+depend on the building.
+
+
+
+END OF WORK GUIDE
+
+`;
+
+
+// Restore saved prayer on page load
+document.addEventListener("DOMContentLoaded", function () {
+    const prayerInputEl = document.getElementById("prayerInput");
+    const savedPrayer = localStorage.getItem("prayerRequest") || "";
+    if (savedPrayer) {
+        prayerInputEl.value = savedPrayer;
+    }
+
+// Restore toggle option for shorten on page load
+document.getElementById("shortToggle").addEventListener("change", function () {
+    localStorage.setItem("shortToggle", this.checked);
+});
+
+// Restore Catholic Option on shorten
+document.getElementById("catholicToggle").addEventListener("change", function () {
+    localStorage.setItem("catholicToggle", this.checked);
+});
+
+    // Save input on typing
+    prayerInputEl.addEventListener("input", () => {
+        localStorage.setItem("prayerRequest", prayerInputEl.value);
+    });
+
+    // Restore selected chip if it matches saved input
+    const chips = document.querySelectorAll(".chip");
+    const selectedChipInput = document.getElementById("selectedChip");
+    chips.forEach(chip => {
+        if (chip.dataset.value.toLowerCase() === savedPrayer.toLowerCase()) {
+            chip.classList.add("selected");
+            selectedChipInput.value = chip.dataset.value;
+        }
+    });
+
+// SHOW / HIDE otherLang when Custom is selected
+const otherLang = document.getElementById("otherLang");
+
+if (value === "Custom") {
+    otherLang.style.display = "inline-block";
+    otherLang.focus();
+} else {
+    otherLang.style.display = "none";
+    otherLang.value = "";
+}
+
+});
+
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const emojiToggle = document.getElementById("emojiToggle");
+
+    // RESTORE
+    const savedEmoji = localStorage.getItem("emojiToggle");
+    if (savedEmoji !== null) {
+        emojiToggle.checked = savedEmoji === "true";
+    }
+
+    // SAVE
+    emojiToggle.addEventListener("change", function () {
+        localStorage.setItem("emojiToggle", this.checked);
+    });
+
+});
+
+    </script>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const chips = document.querySelectorAll(".chip");
+    const selectedChipInput = document.getElementById("selectedChip");
+    const prayerInputEl = document.getElementById("prayerInput");
+
+    chips.forEach(chip => {
+        chip.addEventListener("click", () => {
+            const isSelected = chip.classList.contains("selected");
+            const value = chip.dataset.value;
+
+            // Clear all first
+            chips.forEach(c => c.classList.remove("selected"));
+            selectedChipInput.value = "";
+
+            if (isSelected) {
+                // DESELECT: clear everything
+                prayerInputEl.value = "";
+            } else {
+                // SELECT
+                chip.classList.add("selected");
+                selectedChipInput.value = value;
+
+		if (value === "Favour") {
+                prayerInputEl.value = "Lord, I pray for <name> for Your favour. Let Your kindness go before him, and let Your mercy surround him in all that I do. Grant him favour in the eyes of those in authority and in every lawful and righteous endeavour set before him. Establish the work of his hands. Let this season be marked by open doors, timely help. If the prayee name is female, the prompt changes as him to her.";
+                }
+
+		if (value === "Love") {
+                prayerInputEl.value = "Lord, I pray for <name> for Your love, seeking Your guidance and blessing in the matters of his heart. You know his desires, his longings, and the deepest yearnings that he carry. Prepare his heart to give love selflessly and receive it graciously. Guard him against relationships that would harm or mislead him, and guide him toward connections that will honour You and build one another up. Help him to grow in love for others as You have taught, and above all, help him to trust Your timing and Your plan. If the prayee name is female, the prompt changes as him becomes her.";
+                }
+
+		if (value === "Peace") {
+                prayerInputEl.value = "We commit <country name>, mindful of the suffering, conflict, and unrest that fill our world. We acknowledge that true peace can only come from Your hand, and we earnestly seek Your mercy and guidance. Heal the wounds of those affected by violence, poverty, and injustice. May Your peace, which surpasses all understanding, descend upon every land. Teach us to walk in humility, to speak with kindness, and to act with fairness, so that Your will for harmony and goodwill may be fulfilled among all people.";
+                }
+		
+		if (value === "Healing") {
+                prayerInputEl.value = "Lord, I pray for <name> for Your healing for <condition>. I come before You with a humble heart, seeking Your healing hand. Lord, I ask for Your restoration, Your strength, and Your peace. Lord, bless the hands of those who care for him. Give them wisdom, skill, and discernment in all treatments and interventions. May Your healing light shine upon him, bringing strength, renewal, and relief from every affliction. If the prayee name is female, the prompt changes as him becomes her.";
+                }
+
+		if (value === "Family Harmony") {
+                prayerInputEl.value = "Lord, I pray for <name> for Family harmony, remove every spirit of division, misunderstanding, and resentment from among him. Where there has been conflict, bring reconciliation. Where there has been distance, restore closeness and trust.Grant each member of this family a heart marked by humility, respect, and self-control. Help us to bear with one another in love, to forgive readily, and to place the well-being of the family above pride or personal ambition.If the prayee name is female, the prompt changes as him becomes her.";
+                }
+
+		if (value === "My Work Job") {
+                prayerInputEl.value = "Lord, I pray for <name> for his career and professional calling. You have endowed him with abilities and I ask that You direct his steps according to Your will. Grant him wisdom in every decision, diligence in every task, integrity in all his conduct. Open the right doors at the right time, and close those that would lead him away. Grant him favour with those he work with and serve.If the prayee name is female, the prompt changes as him to her.";
+                }
+		
+	if (value === "Custom") {
+    otherLang.style.display = "inline-block";
+    otherLang.focus();
+
+	// restore previous custom text
+    const saved = localStorage.getItem("customPrayer") || "";
+    otherLang.value = saved;
+    prayerInputEl.value = saved;
+
+      // REAL-TIME mirroring
+                otherLang.addEventListener("input", function () {
+                    prayerInputEl.value = this.value;
+		    localStorage.setItem("customPrayer", this.value);   // <-- correct key
+                    localStorage.setItem("prayerRequest", this.value);
+                });
+
+    // If user clicks Custom again, keep current value
+    prayerInputEl.value = otherLang.value;
+}
+            }
+
+            localStorage.setItem("prayerRequest", prayerInputEl.value);
+        });
+    });
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    const shortToggle = document.getElementById("shortToggle");
+    const saved = localStorage.getItem("shortToggle");
+
+    if (saved !== null) {
+        shortToggle.checked = saved === "true";
+    }
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    const shortToggle = document.getElementById("catholicToggle");
+    const saved = localStorage.getItem("catholicToggle");
+
+    if (saved !== null) {
+        shortToggle.checked = saved === "true";
+    }
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    const saved = localStorage.getItem("customPrayer") || "";
+    const otherLang = document.getElementById("otherLang");
+
+    // hide on load
+    otherLang.style.display = "none";
+
+    // keep the text saved, but invisible
+    otherLang.value = saved;
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    const copyBtn = document.getElementById("copyButton");
+    const card = document.querySelector(".review-card");
+
+    if (copyBtn && card) {
+        copyBtn.addEventListener("click", function () {
+            card.style.display = "block";
+        });
+    }
+});
+
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const toggle = document.getElementById("darkModeToggle");
+    const savedTheme = localStorage.getItem("theme");
+
+    if (savedTheme === "dark") {
+        document.body.classList.add("dark");
+        toggle.checked = true;
+    }
+
+    toggle.addEventListener("change", function () {
+        if (this.checked) {
+            document.body.classList.add("dark");
+            localStorage.setItem("theme", "dark");
+        } else {
+            document.body.classList.remove("dark");
+            localStorage.setItem("theme", "light");
+        }
+    });
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    const bulkToggle = document.getElementById("BulkToggle");
+    if (!bulkToggle) return;
+
+    // RESTORE
+    const savedBulk = localStorage.getItem("bulkToggle");
+    if (savedBulk !== null) {
+        bulkToggle.checked = savedBulk === "true";
+    }
+
+    // APPLY UI IMMEDIATELY
+    applyBulkUI(bulkToggle.checked);
+
+    // SAVE ON CHANGE
+    bulkToggle.addEventListener("change", function () {
+        localStorage.setItem("bulkToggle", this.checked);
+        applyBulkUI(this.checked);
+    });
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    const modelToggle = document.getElementById("modelModeToggle");
+    const modelSelect = document.getElementById("modelSelect");
+
+    if (!modelToggle || !modelSelect) return;
+
+    // Save toggle state only when user clicks manually
+    modelToggle.addEventListener("change", function () {
+        localStorage.setItem("modelModeToggle", this.checked);
+
+        // Show/hide dropdown only when user toggles
+        modelSelect.style.display = this.checked ? "block" : "none";
+    });
+
+    // Restore previously selected model internally
+    const savedModel = localStorage.getItem("selectedModel");
+    if (savedModel) {
+        modelSelect.value = savedModel;
+    }
+
+});
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    const modelToggleEl = document.getElementById("modelModeToggle");
+    const modelSelectEl = document.getElementById("modelSelect");
+
+    // Restore last selected model
+    const savedModel = localStorage.getItem("selectedModel");
+    if (savedModel) {
+        modelSelectEl.value = savedModel;
+    }
+
+    // Restore toggle state
+    const savedToggle = localStorage.getItem("modelModeToggle");
+    modelToggleEl.checked = savedToggle === "true";
+
+    // Show/hide dropdown based on toggle
+    modelSelectEl.style.display = modelToggleEl.checked ? "block" : "none";
+
+    // When user changes toggle
+    modelToggleEl.addEventListener("change", function () {
+        localStorage.setItem("modelModeToggle", this.checked);
+        modelSelectEl.style.display = this.checked ? "block" : "none";
+    });
+
+    // Save selected model when changed
+    modelSelectEl.addEventListener("change", function () {
+        localStorage.setItem("selectedModel", this.value);
+    });
+});
+
+</script>
+
+<script>
+function addBulkEntry() {
+    bulkData.push({ name: "", request: "" });
+    renderBulk();
+}
+
+function renderBulk() {
+    const container = document.getElementById("bulkList");
+    container.innerHTML = "";
+
+    bulkData.forEach((item, index) => {
+        const row = document.createElement("div");
+        row.style.marginBottom = "1px";
+
+        row.innerHTML = `
+            <input placeholder="Prayee"
+                   value="${item.name}"
+                   oninput="bulkData[${index}].name=this.value"
+                   style="width:30%; margin-right:5px;">
+            <input placeholder="Prayer request"
+                   value="${item.request}"
+                   oninput="bulkData[${index}].request=this.value"
+                   style="width:30%;">
+            <button onclick="removeBulk(${index})">X</button>
+        `;
+        container.appendChild(row);
+    });
+}
+
+function removeBulk(index) {
+    bulkData.splice(index, 1);
+    renderBulk();
+}
+
+function saveBulk() {
+    localStorage.setItem("bulkPrayers", JSON.stringify(bulkData));
+    alert("Group prayers saved.");
+}
+
+function loadBulk() {
+    bulkData = JSON.parse(localStorage.getItem("bulkPrayers")) || [];
+    renderBulk();
+}
+
+function applyBulkUI(isBulk) {
+    const prayerInput = document.getElementById("prayerInput");
+    const bulkContainer = document.getElementById("bulkContainer");
+
+    if (!prayerInput || !bulkContainer) return;
+
+    prayerInput.style.display = isBulk ? "none" : "block";
+    bulkContainer.style.display = isBulk ? "block" : "none";
+
+    if (isBulk) {
+        loadBulk();
+    }
+}
+
+function toggleUpdateSection() {
+    const section = document.querySelector(".update-section");
+
+    if (section.style.display === "block") {
+        section.style.display = "none";
+    } else {
+        section.style.display = "block";
+        section.scrollIntoView({ behavior: "smooth" });
+    }
+}
+
+</script>
+
+</head>
+<body>
+<div class="container"><input type="text" id="apiKeyInput" placeholder="Enter Openrouter API Key, Empty for Default" /> <button onclick="saveApiKey()">Save</button>
+<h2>Ask a Question</h2>
+<div class="chat-window" id="chatWindow">
+    <div class="chat-empty" id="chatEmpty">
+        <h3>How can I help you?</h3>
+        <p>Share your Query below.</p>
+    </div>
+</div>
+
+<div class="chat-composer">
+    <textarea
+        id="prayerInput"
+        placeholder="Write your prayer request..."
+        rows="1"
+    ></textarea>
+
+    <button
+        type="button"
+        class="send-button"
+        onclick="searchBiblePrayer()"
+        aria-label="Send prayer"
+    >
+        <i class="fa fa-paper-plane"></i>
+    </button>
+</div>
+<div id="bulkContainer" style="display: none; text-align: center;"><i>Group prayer list: Please enter prayee and click save</i>
+<div id="bulkList"></div>
+<button onclick="addBulkEntry()">+Add</button> <button onclick="saveBulk()">Save</button></div>
+<select id="queryType">
+    <option value="assist">Please assist me</option>
+    <option value="pray" selected >Can You Pray for Me?</option>
+</select>
+<br /><br />Unsure? Select from the following templates:
+<div class="chip-group" id="chipGroup">
+<div class="chip" data-value="Favour">+ Favour</div>
+<div class="chip" data-value="Love">+ Love</div>
+<div class="chip" data-value="Peace">+ World Peace</div>
+<div class="chip" data-value="Healing">+ Healing</div>
+<div class="chip" data-value="Family Harmony">+ Family Harmony</div>
+<div class="chip" data-value="My Work Job">+ My Work Job</div>
+<div class="chip" data-value="Custom">+ Custom</div>
+<input type="text" id="otherLang" placeholder="Your Frequent Prayer Request?" style="display: none; width: 50%; margin-top: 0px;" /></div>
+<input type="hidden" id="selectedChip" value="" /> <br />
+<div class="toggle-row"><label class="form-switch"> <input type="checkbox" id="shortToggle" /> <i></i><br />Shorten </label> <label class="form-switch"> <input type="checkbox" id="catholicToggle" /> <i></i> <br />Catholic </label> <label class="form-switch"> <input type="checkbox" id="emojiToggle" /> <i></i><br />Emoji</label><label class="form-switch"> <input type="checkbox" id="BulkToggle" /> <i></i><br />Group </label> <label class="form-switch"> <input type="checkbox" id="modelModeToggle" /> <i></i><br />Model</label><select id="modelSelect" style="display: none; width: 50%; margin-top: 0px;">
+<option disabled="disabled">Preferred Models</option>
+<option value="openrouter/free" selected="selected">Any Model(Default)</option>
+<option value="google/gemma-3n-e4b-it:free">Google Gemma 3n4b - Good for Long prayers</option>
+<option value="nvidia/nemotron-3-nano-30b-a3b:free">NVIDIA: Nemotron 3 Nano - Reliable</option>
+<option disabled="disabled">Others</option>
+<option value="nvidia/nemotron-nano-12b-v2-vl:free">Nvidia: Nemotron 2</option>
+<option value="nvidia/nemotron-nano-9b-v2:free">NVIDIA: Nemotron Nano 9B V2</option>
+<option value="openai/gpt-oss-20b:free">OpenAI: gpt-oss-20b</option>
+<option value="openai/gpt-oss-120b:free">OpenAI: gpt-oss-120b</option>
+<option value="meta-llama/llama-3.3-70b-instruct:free">Meta: Llama 3.3 70B Instruct</option>
+<option value="meta-llama/llama-3.2-3b-instruct:free">Meta: Llama 3.2 3B Instruct</option>
+<option value="tngtech/deepseek-r1t2-chimera:free">DeepSeek R1T2 Chimera</option>
+<option value="stepfun/step-3.5-flash:free">StepFun: Step 3.5 Flash</option>
+<option value="arcee-ai/trinity-large-preview:free">Arcee AI: Trinity Large Preview</option>
+</select><label class="form-switch"> <input type="checkbox" id="darkModeToggle" /> <i></i><br />Dark mode</label></div>
+<br />
+<h6><a href="andromoV3://custompage_1742785817_d1ce4efcde"><span style="text-decoration: underline;">&nbsp;<span>🚩</span>Found an error? report it by going to Menu, then Contact Us and fill up the form.<span>🚩</span></span></a></h6>
+Response: <br /><button id="copyButton" onclick="copyToClipboard()">Copy to Clipboard</button><br /><button id="adviceButton" onclick="getAdvice()" style="display: none; background-color: #a370f0; color: white;"> Give me advise </button>
+<div class="review-card"><!-- Header -->
+<div class="header">
+<div class="header-left"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Google_Play_2022_logo.svg/2560px-Google_Play_2022_logo.svg.png" /></div>
+<div class="header-left">
+<div class="avatar"></div>
+</div>
+</div>
+<!-- Rating -->
+<div class="rating-row"><i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star inactive"></i></div>
+<textarea placeholder="(Optional) Found this prayer helpful? Share it in review! God Bless!" readonly="readonly"></textarea> <!-- Actions -->
+<div class="actions"><button onclick="window.location.href='https://play.google.com/store/apps/details?id=com.newandromo.dev2862854.app4092850&amp;reviewId=1&amp;showAllReviews=true'" button="" class="btn-submit">Review!</button></div>
+</div>
+<div class="update-section"><br />
+<div class="app-header"><img src="https://play-lh.googleusercontent.com/-vMT92CAs8P8fbcXZbMzpGNlYGqbe8eUg35dbABsk9YtsJhlml3OvAjOut7b-dFSHg=s96-rw" alt="App Icon" class="app-icon" />
+<div class="app-info">
+<p class="app-title">PRAY.AI &ndash; CREATE, SHARE, PRAY</p>
+<p class="app-dev">JaysonTech</p>
+</div>
+</div>
+<div class="button-group"><button class="btn-uninstall"> Uninstall </button> <button class="btn-update" onclick="window.location.href='https://play.google.com/store/apps/details?id=com.newandromo.dev2862854.app4092850'"> Update </button></div>
+</div>
+<div id="response" style="display:none;"></div>
+</div>
+<h6><span style="text-decoration: underline; cursor: pointer;" onclick="toggleUpdateSection()"> &copy;JaysonTech, 2026. Keep your app updated by clicking here! </span></h6>
+</body>
+</html>
